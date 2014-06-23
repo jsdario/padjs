@@ -1,0 +1,99 @@
+@import 'colors';
+@import 'mixins';
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+}
+
+#pad {
+    padding: 8px;
+    display: block;
+    border-radius: 4px;
+    background-color: $pad_bg;
+    @include user-select(none);
+    .row {
+        width: 100%;
+        float: left;
+        display: block;
+    }
+    /* Size modifiers */
+    &.small {
+        height: 520px;
+        width: 505px;
+        .tile {
+            height: 160px;
+            width: 160px;
+            .lt {
+                padding-top: 30%;
+            }
+        }
+        .row {
+            height: 33%;
+        }
+    }
+    &.grand {
+        height: 530px;
+        width: 515px;
+        .tile {
+            height: 120px;
+            width: 120px;
+            .lt {
+                padding-top: 25%;
+            }
+        }
+        .row {
+            height: 25%;
+        }
+    }
+}
+
+.tile {
+    float: left;
+    display: block;
+    margin: 4px 4px 7px 4px;
+    border-radius: 4px;
+    border-bottom-with: 3px;
+    border-bottom-color: grey;
+    border-bottom-style: solid;
+    background-color: $inactive_tile;
+    transition: all 0.2s ease;
+    .lt {
+        font-size: 3em;
+        color:   white;
+        font-family: Helvetica;
+        text-align: center;
+    }
+    &:hover {
+        @include box-shadow(0, 0, 10px, $inactive_tile);
+    }
+    &:active, &.pressed {
+        top: 3px;
+        margin-bottom: 9px;
+        position: relative;
+        border-bottom-width: 1px;
+    }
+    &.playable {
+         @include tile-color($playable_tile, $playable_tile_dark);
+    }
+    &.playing {
+        @include tile-color($playing_tile, $playing_tile_dark);
+        .lt {
+            text-shadow: 0 0 10px white;
+        }
+    }
+    &.looping {
+        @include tile-color($green_tile, $green_tile_dark);
+    }
+    &.selectable {
+        @include tile-color($selectable_tile, $selectable_tile_dark);
+    }
+    &.scheduling {
+        @include tile-color($purple_tile, $purple_tile_dark);
+    }
+}

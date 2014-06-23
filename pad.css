@@ -1,0 +1,108 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+body, html {
+  height: 100%;
+  width: 100%; }
+
+#pad {
+  padding: 8px;
+  display: block;
+  border-radius: 4px;
+  background-color: #d2d2d3;
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+  -o-user-select: none;
+  user-select: none;
+  /* Size modifiers */ }
+  #pad .row {
+    width: 100%;
+    float: left;
+    display: block; }
+  #pad.small {
+    height: 520px;
+    width: 505px; }
+    #pad.small .tile {
+      height: 160px;
+      width: 160px; }
+      #pad.small .tile .lt {
+        padding-top: 30%; }
+    #pad.small .row {
+      height: 33%; }
+  #pad.grand {
+    height: 530px;
+    width: 515px; }
+    #pad.grand .tile {
+      height: 120px;
+      width: 120px; }
+      #pad.grand .tile .lt {
+        padding-top: 25%; }
+    #pad.grand .row {
+      height: 25%; }
+
+.tile {
+  float: left;
+  display: block;
+  margin: 4px 4px 7px 4px;
+  border-radius: 4px;
+  border-bottom-with: 3px;
+  border-bottom-color: grey;
+  border-bottom-style: solid;
+  background-color: #999999;
+  transition: all 0.2s ease; }
+  .tile .lt {
+    font-size: 3em;
+    color: white;
+    font-family: Helvetica;
+    text-align: center; }
+  .tile:hover {
+    -webkit-box-shadow: 0 0 10px #999999 ;
+    -moz-box-shadow: 0 0 10px #999999 ;
+    box-shadow: 0 0 10px #999999 ; }
+  .tile:active, .tile.pressed {
+    top: 3px;
+    margin-bottom: 9px;
+    position: relative;
+    border-bottom-width: 1px; }
+  .tile.playable {
+    background-color: #6666ff;
+    border-bottom-color: #4040a1; }
+    .tile.playable:hover {
+      -webkit-box-shadow: 0 0 10px #6666ff ;
+      -moz-box-shadow: 0 0 10px #6666ff ;
+      box-shadow: 0 0 10px #6666ff ; }
+  .tile.playing {
+    background-color: #ffcc00;
+    border-bottom-color: #ff7f00; }
+    .tile.playing:hover {
+      -webkit-box-shadow: 0 0 10px #ffcc00 ;
+      -moz-box-shadow: 0 0 10px #ffcc00 ;
+      box-shadow: 0 0 10px #ffcc00 ; }
+    .tile.playing .lt {
+      text-shadow: 0 0 10px white; }
+  .tile.looping {
+    background-color: #00cc66;
+    border-bottom-color: #0da128; }
+    .tile.looping:hover {
+      -webkit-box-shadow: 0 0 10px #00cc66 ;
+      -moz-box-shadow: 0 0 10px #00cc66 ;
+      box-shadow: 0 0 10px #00cc66 ; }
+  .tile.selectable {
+    background-color: #dd4b39;
+    border-bottom-color: #c52f24; }
+    .tile.selectable:hover {
+      -webkit-box-shadow: 0 0 10px #dd4b39 ;
+      -moz-box-shadow: 0 0 10px #dd4b39 ;
+      box-shadow: 0 0 10px #dd4b39 ; }
+  .tile.scheduling {
+    background-color: #a469b3;
+    border-bottom-color: #855391; }
+    .tile.scheduling:hover {
+      -webkit-box-shadow: 0 0 10px #a469b3 ;
+      -moz-box-shadow: 0 0 10px #a469b3 ;
+      box-shadow: 0 0 10px #a469b3 ; }
