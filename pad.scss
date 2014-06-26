@@ -72,7 +72,7 @@ body, html {
     &:hover {
         @include box-shadow(0, 0, 10px, $inactive_tile);
     }
-    &:active, &.pressed {
+    &.pressed {
         top: 3px;
         margin-bottom: 9px;
         position: relative;
