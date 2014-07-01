@@ -1,4 +1,6 @@
-/*global FileReader, Audio, Tile, console, browser: true, plusplus: true*/
+/*jslint plusplus: true */
+/*global FileReader, Audio, Tile, console*/
+
 function Pad(N) {
     'use strict';
     var j, n, row, tile, self;
@@ -108,7 +110,7 @@ Pad.prototype = {
             /* Milisegundos desde hora UNIX */
             this.events = [];
             this.scheduler = (new Date()).getTime();
-            for (j = 0; j < this.size; j = j + 1) {
+            for (j = 0; j < this.size; j++) {
                 this.tiles[j].scheduling();
             }
         } catch (exception) {
@@ -124,7 +126,7 @@ Pad.prototype = {
                 end = (new Date()).getTime();
                 frequency = end - start;
                 /* Arreglar diferencia de tiempos */
-                for (j = 0; j < this.events.length; j = j + 1) {
+                for (j = 0; j < this.events.length; j++) {
                     this.events[j].time = this.events[j].time - start;
                     this.events[j].tile.schedule(this.events[j]);
                     this.events[j].tile.schedule(this.events[j], frequency);

@@ -1,3 +1,4 @@
+/*jslint white: true */
 /*global FileReader, Audio, console*/
 function Tile(pad, div) {
     'use strict';
@@ -77,17 +78,17 @@ Tile.prototype = {
         'use strict';
         if (this.track) {
             switch (this.state) {
-            case 'looping':
-                this.div.setAttribute("class", "tile looping");
-                break;
-            case 'scheduling':
-                this.div.setAttribute("class", "tile scheduling");
-                break;
-            case 'scheduled':
-                this.div.setAttribute("class", "tile scheduled");
-                break;
-            default:
-                this.div.setAttribute("class", "tile playable");
+                case 'looping':
+                    this.div.setAttribute("class", "tile looping");
+                    break;
+                case 'scheduling':
+                    this.div.setAttribute("class", "tile scheduling");
+                    break;
+                case 'scheduled':
+                    this.div.setAttribute("class", "tile scheduled");
+                    break;
+                default:
+                    this.div.setAttribute("class", "tile playable");
             }
         } else {
             this.div.setAttribute("class", "tile");
