@@ -42,13 +42,17 @@ Pad.prototype = {
     press: function (key) {
         'use strict';
         this.state = 'pressed';
-        this.tiles[key].clear();
-        this.tiles[key].play();
+        if (this.tiles[key]) {
+            this.tiles[key].clear();
+            this.tiles[key].play();
+        }
     },
     free: function (key) {
         'use strict';
         this.state = null;
-        this.tiles[key].stop();
+        if (this.tiles[key]) {
+            this.tiles[key].stop();
+        }
     },
     listen: function () {
         'use strict';
@@ -117,27 +121,21 @@ Pad.prototype = {
     schedule: function () {
         'use strict';
         try {
-            var self, j, event, events, start, end, frequency;
-            self = this;
-            events  = self.events;
-            start = self.events[0].time;
-            end = events[events.length - 1].time;
-            frequency = end - start;
-            /* Arreglar diferencia de tiempos */
-            for (j = 0; j < events.length; j = j + 1) {
-                events[j].time = events[j].time - start;
-            }
-            /* Intervalo de eventos */
-            self.scheduler = setInterval(function () {
+            if (this.events.length > 0) {
+                var self, j, event, events, start, end, frequency;
+                self = this;
+                events  = self.events;
+                start = self.events[0].time;
+                end = events[events.length - 1].time;
+                frequency = end - start;
+                /* Arreglar diferencia de tiempos */
                 for (j = 0; j < events.length; j = j + 1) {
-                    console.log(events[j].tile + " " + events[j].action +  " " + events[j].time);
-                    console.log("time to start: " + events[j].time);
-                    //Tile.schedule(events[j]);
-                    self.fireEvent(events[j]);
+                    events[j].time = events[j].time - start;
+                    (new Tile()).schedule(events[j], frequency);
                 }
-            }, frequency);
+            }
         } catch (exception) {
-            window.alert(exception);
+            window.alert('Pad.schedule(): ' + exception);
         }
     },
     fireEvent: function (event) {

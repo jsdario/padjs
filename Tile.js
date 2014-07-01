@@ -1,6 +1,10 @@
-/*global FileReader, Audio*/
+/*global FileReader, Audio, console*/
 function Tile(pad, div) {
     'use strict';
+    /* Empty constructor */
+    if (!pad && !div) {
+        return;
+    }
     var self = this;
     this.pad =  pad;
     this.div =  div;
@@ -136,6 +140,10 @@ Tile.prototype = {
     },
     clear: function () {
         'use strict';
+        if (this.scheduler && this.state === 'scheduled') {
+            clearInterval(this.scheduler);
+            this.scheduler = null;
+        }
         this.state = null;
     },
     scheduling: function () {
@@ -146,15 +154,23 @@ Tile.prototype = {
             this.div.setAttribute('class',  this.className + ' scheduling');
         }
     },
-    schedule: function (event) {
+    schedule: function (event, frequency) {
         'use strict';
-        setTimeout(function () {
-            if (event.action === 'play') {
-                event.tile.play();
-            } else {
-                event.tile.stop();
-            }
-        }, event.time);
+        try {
+            this.state = 'scheduled';
+            console.log('scheduled event:' + event);
+            this.scheduler = setInterval(function () {
+                setTimeout(function () {
+                    if (event.action === 'play') {
+                        event.tile.play();
+                    } else {
+                        event.tile.stop();
+                    }
+                }, event.time);
+            }, frequency);
+        } catch (exception) {
+            window.alert('Tile.schedule(): ' + exception);
+        }
     },
     assign: function (key) {
         'use strict';
