@@ -12,14 +12,13 @@ function Tile(pad, div) {
     this.state  = null;
     this.track  = null;
     this.player = null;
-    this.schedulers = [];
+    this.intervals = [];
+    this.timeouts  = [];
     /* Funciones */
     this.div.onmousedown = function (e) {
         /* Escuchadores de shortcut */
         if (e.which === 1) {
-            if (self.state === 'scheduling') {
-                self.pad.notify(self, 'play', (new Date()).getTime());
-            } else {
+            if (self.state !== 'scheduling') {
                 self.clear();
             }
             self.play();
@@ -34,9 +33,6 @@ function Tile(pad, div) {
     };
     this.div.onmouseup = function (e) {
         if (e.which === 1) {
-            if (self.state === 'scheduling') {
-                self.pad.notify(self, 'stop', (new Date()).getTime());
-            }
             window.onkeypress = null;
             self.pad.listen();
             self.stop();
@@ -101,6 +97,7 @@ Tile.prototype = {
         'use strict';
         if (this.player) {
             this.player.play();
+            this.notify('play');
             this.div.setAttribute("class", "tile playing pressed");
         } else {
             this.div.setAttribute("class", "tile pressed");
@@ -112,6 +109,8 @@ Tile.prototype = {
             if (this.player) {
                 this.player.pause();
                 this.player.currentTime = 0;
+                this.notify('stop');
+                /* Loop prevention */
                 this.player.addEventListener('ended', null, false);
             }
             this.free();
@@ -148,18 +147,26 @@ Tile.prototype = {
     clear: function (state) {
         'use strict';
         if (state && this.state === state) {
-            if (this.schedulers.length > 0) {
+            if (this.intervals.length > 0) {
                 this.state = 'scheduled';
             } else {
                 this.state = null;
             }
         } else {
             if (this.state === 'scheduled') {
-                console.log("Clearing Tile of " + this.schedulers.toString());
-                this.schedulers.map(clearInterval);
-                this.schedulers = [];
+                console.log("Clearing Tile of " + this.intervals.toString());
+                this.intervals.map(clearInterval);
+                this.timeouts.map(clearTimeout);
+                this.intervals = [];
+                this.timeouts = [];
             }
             this.state = null;
+        }
+    },
+    notify: function (action) {
+        'use strict';
+        if (this.state === 'scheduling') {
+            this.pad.notify(this, action, (new Date()).getTime());
         }
     },
     scheduling: function () {
@@ -181,24 +188,24 @@ Tile.prototype = {
             var self = this;
             /* No repetir la primera vez */
             if (!frequency) {
-                setTimeout(function () {
+                self.timeouts.push(setTimeout(function () {
                     if (event.action === 'play') {
                         self.play();
                     } else {
                         self.stop();
                     }
-                }, event.time);
+                }, event.time));
             }
             this.state = 'scheduled';
             console.log('scheduled event:' + event);
-            self.schedulers.push(setInterval(function () {
-                setTimeout(function () {
+            self.intervals.push(setInterval(function () {
+                self.timeouts.push(setTimeout(function () {
                     if (event.action === 'play') {
                         self.play();
                     } else {
                         self.stop();
                     }
-                }, event.time);
+                }, event.time));
             }, frequency));
             self.state = 'scheduled';
             self.div.setAttribute('class', 'tile scheduled');
