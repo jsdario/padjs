@@ -8,39 +8,30 @@ function Tile(pad, div) {
     this.state  = null;
     this.track  = null;
     this.player = null;
-    this.scheduler = null;
     /* Funciones */
     this.div.onmousedown = function (e) {
         /* Escuchadores de shortcut */
         if (e.which === 1) {
+            if (self.state === 'scheduling') {
+                self.pad.notify(self, 'play', (new Date()).getTime());
+            } else {
+                self.clear();
+            }
             self.play();
             if (self.pad.state !== 'pressed') {
-                window.onkeydown  = null;
-                window.onkeyup    = null;
-                window.onkeypress = function (e) {
-                    var lt, key;
-                    key = String.fromCharCode(e.which).toUpperCase();
-                    if (self.lt === null) {
-                        /* Borrar si ya existe */
-                        lt = document.getElementById(key);
-                        if (lt) {
-                            lt.id = null;
-                            lt.innerHTML = "";
-                        }
-                        lt  = document.createElement('div');
-                        self.div.appendChild(lt);
-                        lt.className = 'lt';
-                        lt.id = key;
-                        self.lt = lt;
-                    }
-                    self.lt.innerHTML = key;
-                    pad.tiles[key] = self;
+                window.onkeydown  = function (e) {
+                    var key = String.fromCharCode(e.which).toUpperCase();
+                    self.assign(key);
                 };
+                window.onkeyup = null;
             }
         }
     };
     this.div.onmouseup = function (e) {
         if (e.which === 1) {
+            if (self.state === 'scheduling') {
+                self.pad.notify(self, 'stop', (new Date()).getTime());
+            }
             window.onkeypress = null;
             self.pad.listen();
             self.stop();
@@ -64,7 +55,7 @@ function Tile(pad, div) {
         var file, fr;
         file = e.dataTransfer.files[0];
         if (!document.createElement('audio').canPlayType(file.type)) {
-            window.alert(file.type + "is not supported by your browser");
+            window.alert(file.type + " is not supported by your browser");
             self.free();
             return false;
         }
@@ -87,15 +78,16 @@ Tile.prototype = {
             this.div.setAttribute("class", "tile playable");
         } else if (this.state === 'looping') {
             this.div.setAttribute("class", "tile looping");
-        } else if (this.state === 'scheduling') {
-            this.div.setAttribute("class", "tile scheduling");
+        } else if (this.state === 'scheduling' ||
+                   this.state === 'scheduled') {
+            this.div.setAttribute("class",
+                                  "tile playable scheduling");
         } else {
             this.div.setAttribute("class", "tile");
         }
     },
     play: function () {
         'use strict';
-        this.clear();
         if (this.player) {
             this.player.play();
             this.div.setAttribute("class", "tile playing pressed");
@@ -146,14 +138,46 @@ Tile.prototype = {
         'use strict';
         this.state = null;
     },
-    schedule: function () {
+    scheduling: function () {
         'use strict';
         if (this.track) {
+            this.state = 'scheduling';
             this.className = this.div.className;
             this.div.setAttribute('class',  this.className + ' scheduling');
-            this.scheduler = {};
-            this.scheduler.start = 0;
-            this.scheduler.listening = true;
+        }
+    },
+    schedule: function (event) {
+        'use strict';
+        setTimeout(function () {
+            if (event.action === 'play') {
+                event.tile.play();
+            } else {
+                event.tile.stop();
+            }
+        }, event.time);
+    },
+    assign: function (key) {
+        'use strict';
+        if (/[a-zA-Z0-9-_ ]/.test(key)) {
+            /* Borrar si ya existe */
+            var lt = document.getElementById(key);
+            if (lt) {
+                lt.innerHTML = "";
+                lt.id = "";
+            }
+            if (this.lt === null) {
+                lt  = document.createElement('div');
+                this.div.appendChild(lt);
+                lt.className = 'lt';
+                this.lt = lt;
+                this.key = key;
+            } else {
+                /* Quitar escuchadores anteriores */
+                this.pad.tiles[this.lt.id] = null;
+            }
+            this.lt.id = key;
+            this.lt.innerHTML = key;
+            this.pad.tiles[key] = this;
         }
     }
 };

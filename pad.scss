@@ -12,6 +12,7 @@ body, html {
 }
 
 #pad {
+    margin: 30px;
     padding: 8px;
     display: block;
     border-radius: 4px;
@@ -51,6 +52,10 @@ body, html {
             height: 25%;
         }
     }
+    
+    &.scheduling {
+        border: solid 3px $purple_tile;
+    }
 }
 
 .tile {
@@ -58,7 +63,7 @@ body, html {
     display: block;
     margin: 4px 4px 7px 4px;
     border-radius: 4px;
-    border-bottom-with: 3px;
+    border-bottom-width: 3px;
     border-bottom-color: grey;
     border-bottom-style: solid;
     background-color: $inactive_tile;
@@ -79,7 +84,7 @@ body, html {
         border-bottom-width: 1px;
     }
     &.playable {
-         @include tile-color($playable_tile, $playable_tile_dark);
+        @include tile-color($playable_tile, $playable_tile_dark);
     }
     &.playing {
         @include tile-color($playing_tile, $playing_tile_dark);
@@ -94,6 +99,8 @@ body, html {
         @include tile-color($selectable_tile, $selectable_tile_dark);
     }
     &.scheduling {
-        @include tile-color($purple_tile, $purple_tile_dark);
+        &:hover {
+            @include tile-color($purple_tile, $purple_tile_dark);
+        }
     }
 }

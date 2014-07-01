@@ -1,4 +1,4 @@
-/*global FileReader, Audio, Tile*/
+/*global FileReader, Audio, Tile, console, browser: true, plusplus: true*/
 function Pad(N) {
     'use strict';
     var j, n, row, tile, self;
@@ -16,8 +16,6 @@ function Pad(N) {
             N = 4;
             this.div.className = 'grand';
         }
-        //h = this.div.offsetHeight;
-        //w = this.div.offsetWidth;
         for (j = 0; j < N; j = j + 1) {
             row = document.createElement('div');
             row.className = 'row';
@@ -59,21 +57,98 @@ Pad.prototype = {
         window.onkeydown = function (e) {
             var key = String.fromCharCode(e.which).toUpperCase();
             if (e.which === 17) {
-                for (j = 0; j < self.size; j = j + 1) {
-                    self.tiles[j].schedule();
-                }
+                self.scheduling();
             }
             self.press(key);
         };
         window.onkeyup = function (e) {
-            if (e.which === 17) {
-                for (j = 0; j < self.size; j = j + 1) {
-                    self.tiles[j].free();
+            try {
+                var key = String.fromCharCode(e.which).toUpperCase();
+                if (e.which === 17) {
+                    self.clear();
+                    self.schedule();
+                } else if (/[a-zA-Z0-9-_ ]/.test(key)) {
+                    self.free(key);
                 }
+            } catch (exception) {
+                window.alert(exception);
             }
-            var key = String.fromCharCode(e.which).toUpperCase();
-            self.free(key);
         };
+    },
+    notify: function (tile, action, time) {
+        'use strict';
+        try {
+            console.log('notifying: ' + action);
+            if (this.scheduler) {
+                this.events.push({tile: tile,
+                                  action: action,
+                                  time: time});
+            }
+        } catch (e) {
+            window.alert(e);
+        }
+    },
+    clear: function () {
+        'use strict';
+        var j;
+        this.scheduler = null;
+        this.div.setAttribute("class", this.className);
+        for (j = 0; j < this.size; j = j + 1) {
+            this.tiles[j].clear();
+            this.tiles[j].free();
+        }
+    },
+    scheduling: function () {
+        'use strict';
+        var j;
+        try {
+            this.className =  this.div.getAttribute("class");
+            this.div.setAttribute("class", this.className + " scheduling");
+            /* Milisegundos desde hora UNIX */
+            this.events = [];
+            this.scheduler = (new Date()).getTime();
+            for (j = 0; j < this.size; j = j + 1) {
+                this.tiles[j].scheduling();
+            }
+        } catch (exception) {
+            window.alert(exception);
+        }
+    },
+    schedule: function () {
+        'use strict';
+        try {
+            var self, j, event, events, start, end, frequency;
+            self = this;
+            events  = self.events;
+            start = self.events[0].time;
+            end = events[events.length - 1].time;
+            frequency = end - start;
+            /* Arreglar diferencia de tiempos */
+            for (j = 0; j < events.length; j = j + 1) {
+                events[j].time = events[j].time - start;
+            }
+            /* Intervalo de eventos */
+            self.scheduler = setInterval(function () {
+                for (j = 0; j < events.length; j = j + 1) {
+                    console.log(events[j].tile + " " + events[j].action +  " " + events[j].time);
+                    console.log("time to start: " + events[j].time);
+                    //Tile.schedule(events[j]);
+                    self.fireEvent(events[j]);
+                }
+            }, frequency);
+        } catch (exception) {
+            window.alert(exception);
+        }
+    },
+    fireEvent: function (event) {
+        'use strict';
+        setTimeout(function () {
+            if (event.action === 'play') {
+                event.tile.play();
+            } else {
+                event.tile.stop();
+            }
+        }, event.time);
     }
 };
 
