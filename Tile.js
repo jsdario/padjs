@@ -12,6 +12,7 @@ function Tile(pad, div) {
     this.state  = null;
     this.track  = null;
     this.player = null;
+    this.schedulers = [];
     /* Funciones */
     this.div.onmousedown = function (e) {
         /* Escuchadores de shortcut */
@@ -78,14 +79,20 @@ Tile.prototype = {
     constructor: Tile,
     free: function () {
         'use strict';
-        if (this.track && this.state === null) {
-            this.div.setAttribute("class", "tile playable");
-        } else if (this.state === 'looping') {
-            this.div.setAttribute("class", "tile looping");
-        } else if (this.state === 'scheduling' ||
-                   this.state === 'scheduled') {
-            this.div.setAttribute("class",
-                                  "tile playable scheduling");
+        if (this.track) {
+            switch (this.state) {
+            case 'looping':
+                this.div.setAttribute("class", "tile looping");
+                break;
+            case 'scheduling':
+                this.div.setAttribute("class", "tile scheduling");
+                break;
+            case 'scheduled':
+                this.div.setAttribute("class", "tile scheduled");
+                break;
+            default:
+                this.div.setAttribute("class", "tile playable");
+            }
         } else {
             this.div.setAttribute("class", "tile");
         }
@@ -138,36 +145,63 @@ Tile.prototype = {
             this.player.play();
         }
     },
-    clear: function () {
+    clear: function (state) {
         'use strict';
-        if (this.scheduler && this.state === 'scheduled') {
-            clearInterval(this.scheduler);
-            this.scheduler = null;
+        if (state && this.state === state) {
+            if (this.schedulers.length > 0) {
+                this.state = 'scheduled';
+            } else {
+                this.state = null;
+            }
+        } else {
+            if (this.state === 'scheduled') {
+                console.log("Clearing Tile of " + this.schedulers.toString());
+                this.schedulers.map(clearInterval);
+                this.schedulers = [];
+            }
+            this.state = null;
         }
-        this.state = null;
     },
     scheduling: function () {
         'use strict';
-        if (this.track) {
-            this.state = 'scheduling';
-            this.className = this.div.className;
-            this.div.setAttribute('class',  this.className + ' scheduling');
+        try {
+            if (this.track) {
+                console.log('Tile.scheduling(): Recording events');
+                this.state = 'scheduling';
+                this.className = this.div.className;
+                this.div.setAttribute('class',  this.className + ' scheduling');
+            }
+        } catch (exception) {
+            window.alert('Tile.scheduling(): ' + exception);
         }
     },
     schedule: function (event, frequency) {
         'use strict';
         try {
-            this.state = 'scheduled';
-            console.log('scheduled event:' + event);
-            this.scheduler = setInterval(function () {
+            var self = this;
+            /* No repetir la primera vez */
+            if (!frequency) {
                 setTimeout(function () {
                     if (event.action === 'play') {
-                        event.tile.play();
+                        self.play();
                     } else {
-                        event.tile.stop();
+                        self.stop();
                     }
                 }, event.time);
-            }, frequency);
+            }
+            this.state = 'scheduled';
+            console.log('scheduled event:' + event);
+            self.schedulers.push(setInterval(function () {
+                setTimeout(function () {
+                    if (event.action === 'play') {
+                        self.play();
+                    } else {
+                        self.stop();
+                    }
+                }, event.time);
+            }, frequency));
+            self.state = 'scheduled';
+            self.div.setAttribute('class', 'tile scheduled');
         } catch (exception) {
             window.alert('Tile.schedule(): ' + exception);
         }

@@ -102,10 +102,24 @@ body, html {
       -webkit-box-shadow: 0 0 10px #DD4B39 ;
       -moz-box-shadow: 0 0 10px #DD4B39 ;
       box-shadow: 0 0 10px #DD4B39 ; }
-  .tile.scheduling:hover {
+  .tile.scheduling {
+    background-color: #6666FF;
+    border-bottom-color: #4040A1; }
+    .tile.scheduling:hover {
+      -webkit-box-shadow: 0 0 10px #6666FF ;
+      -moz-box-shadow: 0 0 10px #6666FF ;
+      box-shadow: 0 0 10px #6666FF ; }
+    .tile.scheduling:hover {
+      background-color: #A469B3;
+      border-bottom-color: #855391; }
+      .tile.scheduling:hover:hover {
+        -webkit-box-shadow: 0 0 10px #A469B3 ;
+        -moz-box-shadow: 0 0 10px #A469B3 ;
+        box-shadow: 0 0 10px #A469B3 ; }
+  .tile.scheduled {
     background-color: #A469B3;
     border-bottom-color: #855391; }
-    .tile.scheduling:hover:hover {
+    .tile.scheduled:hover {
       -webkit-box-shadow: 0 0 10px #A469B3 ;
       -moz-box-shadow: 0 0 10px #A469B3 ;
       box-shadow: 0 0 10px #A469B3 ; }
