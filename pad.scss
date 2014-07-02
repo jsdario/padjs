@@ -99,7 +99,6 @@ body, html {
         @include tile-color($selectable_tile, $selectable_tile_dark);
     }
     &.scheduling {
-        @include tile-color($playable_tile, $playable_tile_dark);
         &:hover {
             @include tile-color($purple_tile, $purple_tile_dark);
         }

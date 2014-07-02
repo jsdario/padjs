@@ -90,6 +90,9 @@ Tile.prototype = {
                 default:
                     this.div.setAttribute("class", "tile playable");
             }
+            if(!this.player.paused) {
+                this.div.setAttribute("class", "tile playing");
+            }
         } else {
             this.div.setAttribute("class", "tile");
         }
@@ -108,9 +111,9 @@ Tile.prototype = {
         'use strict';
         try {
             if (this.player) {
+                this.notify('stop');
                 this.player.pause();
                 this.player.currentTime = 0;
-                this.notify('stop');
                 /* Loop prevention */
                 this.player.addEventListener('ended', null, false);
             }
@@ -174,9 +177,9 @@ Tile.prototype = {
         'use strict';
         try {
             if (this.track) {
-                console.log('Tile.scheduling(): Recording events');
                 this.state = 'scheduling';
                 this.className = this.div.className;
+                console.log('Tile.scheduling(): Recording events');
                 this.div.setAttribute('class',  this.className + ' scheduling');
             }
         } catch (exception) {
@@ -187,16 +190,14 @@ Tile.prototype = {
         'use strict';
         try {
             var self = this;
-            /* No repetir la primera vez */
-            if (!frequency) {
-                self.timeouts.push(setTimeout(function () {
-                    if (event.action === 'play') {
-                        self.play();
-                    } else {
-                        self.stop();
-                    }
-                }, event.time));
-            }
+            /* Hacer una vez inmediatamente */
+            self.timeouts.push(setTimeout(function () {
+                if (event.action === 'play') {
+                    self.play();
+                } else {
+                    self.stop();
+                }
+            }, event.time));
             this.state = 'scheduled';
             console.log('scheduled event:' + event);
             self.intervals.push(setInterval(function () {

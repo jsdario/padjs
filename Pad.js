@@ -18,6 +18,7 @@ function Pad(N) {
             N = 4;
             this.div.className = 'grand';
         }
+        this.className = this.div.className;
         for (j = 0; j < N; j = j + 1) {
             row = document.createElement('div');
             row.className = 'row';
@@ -94,11 +95,13 @@ Pad.prototype = {
     clear: function () {
         'use strict';
         var j;
-        this.scheduler = null;
-        this.div.setAttribute("class", this.className);
-        for (j = 0; j < this.size; j = j + 1) {
-            this.tiles[j].clear('scheduling');
-            this.tiles[j].free();
+        if (this.scheduler) {
+            this.scheduler = null;
+            this.div.setAttribute("class", this.className);
+            for (j = 0; j < this.size; j = j + 1) {
+                this.tiles[j].clear('scheduling');
+                this.tiles[j].free();
+            }
         }
     },
     scheduling: function () {
@@ -128,7 +131,6 @@ Pad.prototype = {
                 /* Arreglar diferencia de tiempos */
                 for (j = 0; j < this.events.length; j++) {
                     this.events[j].time = this.events[j].time - start;
-                    this.events[j].tile.schedule(this.events[j]);
                     this.events[j].tile.schedule(this.events[j], frequency);
                 }
             }
