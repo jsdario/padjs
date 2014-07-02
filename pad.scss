@@ -87,6 +87,7 @@ body, html {
         @include tile-color($playable_tile, $playable_tile_dark);
     }
     &.playing {
+        @extend .pressed;
         @include tile-color($playing_tile, $playing_tile_dark);
         .lt {
             text-shadow: 0 0 10px white;

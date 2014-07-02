@@ -1,5 +1,35 @@
+/*jslint plusplus: true */
 /*jslint white: true */
 /*global FileReader, Audio, console*/
+
+function Scheduler() {
+    'use strict';
+}
+
+Scheduler.prototype = {
+    plan: function (tile, event, frequency) {
+        'use strict';
+        /* Hacer una vez inmediatamente */
+        tile.timeouts.push(setTimeout(function () {
+            if (event.action === 'play') {
+                tile.play();
+            } else {
+                tile.stop();
+            }
+        }, event.time));
+        console.log('scheduled event:' + event);
+        tile.intervals.push(setInterval(function () {
+            tile.timeouts.push(setTimeout(function () {
+                if (event.action === 'play') {
+                    tile.play();
+                } else {
+                    tile.stop();
+                }
+            }, event.time));
+        }, frequency));
+    }
+};
+
 function Tile(pad, div) {
     'use strict';
     /* Empty constructor */
@@ -41,7 +71,7 @@ function Tile(pad, div) {
     };
     this.div.oncontextmenu = function (e) {
         self.stop();
-        self.loop();
+        console.log('tile options here!');
         e.preventDefault();
         e.stopPropagation();
         return false;
@@ -74,13 +104,10 @@ function Tile(pad, div) {
 
 Tile.prototype = {
     constructor: Tile,
-    free: function () {
+    free: function (now) {
         'use strict';
         if (this.track) {
             switch (this.state) {
-                case 'looping':
-                    this.div.setAttribute("class", "tile looping");
-                    break;
                 case 'scheduling':
                     this.div.setAttribute("class", "tile scheduling");
                     break;
@@ -90,7 +117,7 @@ Tile.prototype = {
                 default:
                     this.div.setAttribute("class", "tile playable");
             }
-            if(!this.player.paused) {
+            if(!now && !this.player.paused) {
                 this.div.setAttribute("class", "tile playing");
             }
         } else {
@@ -102,30 +129,33 @@ Tile.prototype = {
         if (this.player) {
             this.player.play();
             this.notify('play');
-            this.div.setAttribute("class", "tile playing pressed");
+            this.div.setAttribute("class", "tile playing");
+            /* Looping */
+            if (this.player.duration > 5) {
+                this.player.addEventListener('ended', function () {
+                    this.play();
+                }, false);
+            }
         } else {
             this.div.setAttribute("class", "tile pressed");
         }
     },
     stop: function () {
         'use strict';
-        try {
-            if (this.player) {
-                this.notify('stop');
+        if (this.player) {
+            this.notify('stop');
+            if (this.player.duration > 5) {
                 this.player.pause();
                 this.player.currentTime = 0;
-                /* Loop prevention */
-                this.player.addEventListener('ended', null, false);
+                this.free();
+            } else {
+                this.free('now');
             }
-            this.free();
-        } catch (e) {
-            window.alert(e);
         }
     },
     load: function (track) {
         'use strict';
-        var ae, self;
-        self = this;
+        var self = this;
         this.track = track;
         if (this.player === null) {
             this.player = new Audio(track);
@@ -136,17 +166,6 @@ Tile.prototype = {
         this.player.onloadeddata = function () {
             self.div.setAttribute("class", "tile playable");
         };
-    },
-    loop: function () {
-        'use strict';
-        if (this.track) {
-            this.state = 'looping';
-            this.div.setAttribute("class", "tile looping");
-            this.player.addEventListener('ended', function () {
-                this.play();
-            }, false);
-            this.player.play();
-        }
     },
     clear: function (state) {
         'use strict';
@@ -170,7 +189,11 @@ Tile.prototype = {
     notify: function (action) {
         'use strict';
         if (this.state === 'scheduling') {
-            this.pad.notify(this, action, (new Date()).getTime());
+            console.log('notifying: ' + action);
+            this.events.push({
+                action: action,
+                time: (new Date()).getTime()
+            });
         }
     },
     scheduling: function () {
@@ -181,39 +204,30 @@ Tile.prototype = {
                 this.className = this.div.className;
                 console.log('Tile.scheduling(): Recording events');
                 this.div.setAttribute('class',  this.className + ' scheduling');
+                /* Milisegundos desde hora UNIX */
+                this.events = [];
+                this.scheduler = (new Date()).getTime();
             }
         } catch (exception) {
             window.alert('Tile.scheduling(): ' + exception);
         }
     },
-    schedule: function (event, frequency) {
+    schedule: function () {
         'use strict';
-        try {
-            var self = this;
-            /* Hacer una vez inmediatamente */
-            self.timeouts.push(setTimeout(function () {
-                if (event.action === 'play') {
-                    self.play();
-                } else {
-                    self.stop();
-                }
-            }, event.time));
-            this.state = 'scheduled';
-            console.log('scheduled event:' + event);
-            self.intervals.push(setInterval(function () {
-                self.timeouts.push(setTimeout(function () {
-                    if (event.action === 'play') {
-                        self.play();
-                    } else {
-                        self.stop();
-                    }
-                }, event.time));
-            }, frequency));
-            self.state = 'scheduled';
+        if(this.events && this.events.length > 0) {
+            var j, self, start, event, frequency;
+            self = this;
+            start = this.events[0].time;
+            frequency = (new Date()).getTime() - this.scheduler;
+            for (j = 0; j < this.events.length; j++) {
+                event = this.events[j];
+                event.time = event.time - start;
+                (new Scheduler()).plan(this, event, frequency);
+            }
             self.div.setAttribute('class', 'tile scheduled');
-        } catch (exception) {
-            window.alert('Tile.schedule(): ' + exception);
+            this.state = 'scheduled';
         }
+
     },
     assign: function (key) {
         'use strict';

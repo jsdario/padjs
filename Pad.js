@@ -85,13 +85,6 @@ Pad.prototype = {
             self.clear();
         };
     },
-    notify: function (l, a, t) {
-        'use strict';
-        if (this.scheduler) {
-            console.log('notifying: ' + a);
-            this.events.push({tile: l, action: a, time: t});
-        }
-    },
     clear: function () {
         'use strict';
         var j;
@@ -110,9 +103,6 @@ Pad.prototype = {
         try {
             this.className =  this.div.getAttribute("class");
             this.div.setAttribute("class", this.className + " scheduling");
-            /* Milisegundos desde hora UNIX */
-            this.events = [];
-            this.scheduler = (new Date()).getTime();
             for (j = 0; j < this.size; j++) {
                 this.tiles[j].scheduling();
             }
@@ -122,25 +112,16 @@ Pad.prototype = {
     },
     schedule: function () {
         'use strict';
-        try {
-            if (this.events.length > 0) {
-                var j, start, end, frequency;
-                start = this.events[0].time;
-                end = (new Date()).getTime();
-                frequency = end - start;
-                /* Arreglar diferencia de tiempos */
-                for (j = 0; j < this.events.length; j++) {
-                    this.events[j].time = this.events[j].time - start;
-                    this.events[j].tile.schedule(this.events[j], frequency);
-                }
-            }
-        } catch (exception) {
-            window.alert('Pad.schedule(): ' + exception);
+        var j;
+        for (j = 0; j < this.size; j++) {
+            this.tiles[j].schedule();
         }
+        this.div.setAttribute("class", this.className);
     }
 };
 
 var pad = new Pad(3);
 pad.tiles[0].load('presets/upallnight.mp3');
+pad.tiles[1].load('presets/clhat.wav');
 pad.tiles[3].load('presets/hohey.mp3');
 pad.tiles[4].load('presets/pray.mp3');

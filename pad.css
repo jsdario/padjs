@@ -67,7 +67,7 @@ body, html {
     -webkit-box-shadow: 0 0 10px #999999 ;
     -moz-box-shadow: 0 0 10px #999999 ;
     box-shadow: 0 0 10px #999999 ; }
-  .tile.pressed {
+  .tile.pressed, .tile.playing {
     top: 3px;
     margin-bottom: 9px;
     position: relative;
@@ -102,20 +102,13 @@ body, html {
       -webkit-box-shadow: 0 0 10px #DD4B39 ;
       -moz-box-shadow: 0 0 10px #DD4B39 ;
       box-shadow: 0 0 10px #DD4B39 ; }
-  .tile.scheduling {
-    background-color: #6666FF;
-    border-bottom-color: #4040A1; }
-    .tile.scheduling:hover {
-      -webkit-box-shadow: 0 0 10px #6666FF ;
-      -moz-box-shadow: 0 0 10px #6666FF ;
-      box-shadow: 0 0 10px #6666FF ; }
-    .tile.scheduling:hover {
-      background-color: #A469B3;
-      border-bottom-color: #855391; }
-      .tile.scheduling:hover:hover {
-        -webkit-box-shadow: 0 0 10px #A469B3 ;
-        -moz-box-shadow: 0 0 10px #A469B3 ;
-        box-shadow: 0 0 10px #A469B3 ; }
+  .tile.scheduling:hover {
+    background-color: #A469B3;
+    border-bottom-color: #855391; }
+    .tile.scheduling:hover:hover {
+      -webkit-box-shadow: 0 0 10px #A469B3 ;
+      -moz-box-shadow: 0 0 10px #A469B3 ;
+      box-shadow: 0 0 10px #A469B3 ; }
   .tile.scheduled {
     background-color: #A469B3;
     border-bottom-color: #855391; }
