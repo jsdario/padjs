@@ -96,6 +96,8 @@ Tile.prototype = {
             } else {
                 this.free('now');
             }
+        } else { /* Para pressed por teclado */
+            this.free(); 
         }
     },
     load: function (track) {
