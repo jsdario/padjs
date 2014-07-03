@@ -1,6 +1,7 @@
 /*jslint plusplus: true */
 /*jslint white: true */
 /*global FileReader, Audio, console, Scheduler, now*/
+var LONG_SAMPLE_TIME = 2;
 
 function Tile(pad, div) {
     'use strict';
@@ -12,18 +13,13 @@ function Tile(pad, div) {
     self.pad =  pad;
     self.div =  div;
     self.lt  = null;
-    self.state  = null;
     self.track  = null;
     self.player = null;
     /* Funciones */
     self.div.onmousedown = function (e) {
         /* Escuchadores de shortcut */
         if (e.which === 1) {
-            if (self.state !== 'scheduling') {
-                self.clear();
-            }
             self.play();
-            self.notify('play');
             if (self.pad.state !== 'pressed') {
                 window.onkeydown  = function (event) {
                     self.assign(event);
@@ -35,42 +31,19 @@ function Tile(pad, div) {
     self.div.onmouseup = function (e) {
         if (e.which === 1) {
             window.onkeypress = null;
-            self.notify('stop');
             self.pad.listen();
             self.stop();
         }
     };
     self.div.oncontextmenu = function (e) {
         self.stop();
+        /* Aqui va el menu de opciones, de momento, volumen */
         console.log('tile options here!');
         e.preventDefault();
         e.stopPropagation();
         return false;
     };
-    self.div.ondragover = function (e) {
-        self.div.setAttribute("class", "tile selectable");
-        e.preventDefault();
-    };
-    self.div.ondragleave = function (e) {
-        self.free();
-    };
-    self.div.ondrop = function (e) {
-        var file, fr;
-        file = e.dataTransfer.files[0];
-        if (!document.createElement('audio').canPlayType(file.type)) {
-            window.alert(file.type + " is not supported by your browser");
-            self.free();
-            return false;
-        }
-        fr = new FileReader();
-        fr.onload = function (f) {
-            self.load(f.target.result);
-        };
-        fr.readAsDataURL(file);
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-    };
+    self.listenDragAndDrop();
 }
 
 Tile.prototype = {
@@ -98,14 +71,17 @@ Tile.prototype = {
     play: function () {
         'use strict';
         if (this.player) {
-            this.player.play();
-            this.div.setAttribute("class", "tile playing");
             /* Looping */
-            if (this.player.duration > 5) {
+            if (this.player.duration > LONG_SAMPLE_TIME) {
                 this.player.addEventListener('ended', function () {
                     this.play();
                 }, false);
+            } else {
+                /* Rebobinar al volver a pulsar */
+                this.player.currentTime = 0;
             }
+            this.player.play();
+            this.div.setAttribute("class", "tile playing");
         } else {
             this.div.setAttribute("class", "tile pressed");
         }
@@ -113,9 +89,9 @@ Tile.prototype = {
     stop: function () {
         'use strict';
         if (this.player) {
-            if (this.player.duration > 5) {
-                this.player.pause();
+            if (this.player.duration > LONG_SAMPLE_TIME) {
                 this.player.currentTime = 0;
+                this.player.pause();
                 this.free();
             } else {
                 this.free('now');
@@ -136,70 +112,12 @@ Tile.prototype = {
             self.div.setAttribute("class", "tile playable");
         };
     },
-    clear: function (state) {
+    assign: function (key) {
         'use strict';
-        if (state && this.state === state) {
-            if (this.intervals.length > 0) {
-                this.state = 'scheduled';
-            } else {
-                this.state = null;
-            }
-        } else {
-            if (this.state === 'scheduled') {
-                this.scheduler.clear();
-                this.scheduler = null;
-                this.events = [];
-            }
-            this.state = null;
-        }
-    },
-    notify: function (action) {
-        'use strict';
-        if (this.scheduler) {
-            console.log('notifying: ' + action);
-            this.events.push({
-                action: action,
-                time: now()
-            });
-        }
-    },
-    scheduling: function () {
-        'use strict';
-        try {
-            if (this.track) {
-                this.state = 'scheduling';
-                console.log('Tile.scheduling(): Creating scheduler');
-                this.div.setAttribute('class', 'tile scheduling');
-                this.events = [];
-                this.scheduler = new Scheduler();
-            }
-        } catch (exception) {
-            window.alert('Tile.scheduling(): ' + exception);
-        }
-    },
-    schedule: function () {
-        'use strict';
-        if(this.events && this.events.length > 0) {
-            var j, start, events, frequency;
-            events = this.events;
-            start = events[0].time;
-            frequency = now() - start;
-            for (j = 0; j < events.length; j++) {
-                events[j].time = events[j].time - now();
-                this.scheduler.plan(this, event, frequency);
-            }
-            this.div.setAttribute('class', 'tile scheduled');
-            this.state = 'scheduled';
-        }
-
-    },
-    assign: function (event) {
-        'use strict';
-        var lt, key;
-        key = String.fromCharCode(event.which).toUpperCase();
+        key = String.fromCharCode(key.which).toUpperCase();
         if (/[a-zA-Z0-9-_ ]/.test(key)) {
             /* Borrar si ya existe */
-            lt = document.getElementById(key);
+            var lt = document.getElementById(key);
             if (lt) {
                 lt.innerHTML = "";
                 lt.id = "";
@@ -218,5 +136,33 @@ Tile.prototype = {
             this.lt.innerHTML = key;
             this.pad.tiles[key] = this;
         }
+    },
+    listenDragAndDrop: function () {
+        'use strict';
+        var self = this;
+        self.div.ondragover = function (e) {
+            self.div.setAttribute("class", "tile selectable");
+            e.preventDefault();
+        };
+        self.div.ondragleave = function (e) {
+            self.free();
+        };
+        self.div.ondrop = function (e) {
+            var file, fr;
+            file = e.dataTransfer.files[0];
+            if (!document.createElement('audio').canPlayType(file.type)) {
+                window.alert(file.type + " is not supported by your browser");
+                self.free();
+                return false;
+            }
+            fr = new FileReader();
+            fr.onload = function (f) {
+                self.load(f.target.result);
+            };
+            fr.readAsDataURL(file);
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        };
     }
 };

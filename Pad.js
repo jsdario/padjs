@@ -11,7 +11,6 @@ function Pad(N) {
     this.size  = N * N;
     this.color = null;
     this.tiles = [];
-    this.scheduler = null;
     try {
         this.div = document.getElementById('pad');
         if (N === 3) {
@@ -44,7 +43,6 @@ Pad.prototype = {
         'use strict';
         this.state = 'pressed';
         if (this.tiles[key]) {
-            this.tiles[key].clear();
             this.tiles[key].play();
         }
     },
@@ -62,7 +60,7 @@ Pad.prototype = {
         window.onkeydown = function (e) {
             var key = String.fromCharCode(e.which).toUpperCase();
             if (e.which === CTRL) {
-                self.scheduling();
+                console.log('CTRL pressed');
             }
             self.press(key);
         };
@@ -70,8 +68,7 @@ Pad.prototype = {
             try {
                 var key = String.fromCharCode(e.which).toUpperCase();
                 if (e.which === CTRL) {
-                    self.clear();
-                    self.schedule();
+                    console.log('CTRL freed');
                 } else if (/[a-zA-Z0-9-_ ]/.test(key)) {
                     self.free(key);
                 }
@@ -80,40 +77,8 @@ Pad.prototype = {
             }
         };
         window.onblur = function () {
-            self.clear();
+            console.log('Page blurred');
         };
-    },
-    clear: function () {
-        'use strict';
-        var j;
-        if (this.scheduler) {
-            this.scheduler = null;
-            this.div.setAttribute("class", this.className);
-            for (j = 0; j < this.size; j = j + 1) {
-                this.tiles[j].clear('scheduling');
-                this.tiles[j].free();
-            }
-        }
-    },
-    scheduling: function () {
-        'use strict';
-        var j;
-        try {
-            this.div.setAttribute("class", this.className + " scheduling");
-            for (j = 0; j < this.size; j++) {
-                this.tiles[j].scheduling();
-            }
-        } catch (exception) {
-            window.alert(exception);
-        }
-    },
-    schedule: function () {
-        'use strict';
-        var j;
-        for (j = 0; j < this.size; j++) {
-            this.tiles[j].schedule();
-        }
-        this.div.setAttribute("class", this.className);
     }
 };
 
