@@ -1,6 +1,8 @@
 /*jslint plusplus: true */
 /*global FileReader, Audio, Tile, console*/
 
+var CTRL = 17;
+
 function Pad(N) {
     'use strict';
     var j, n, row, tile, self;
@@ -38,10 +40,6 @@ function Pad(N) {
 
 Pad.prototype = {
     constructor: Pad,
-    load: function () {
-        'use strict';
-        window.alert("load");
-    },
     press: function (key) {
         'use strict';
         this.state = 'pressed';
@@ -63,7 +61,7 @@ Pad.prototype = {
         self  = this;
         window.onkeydown = function (e) {
             var key = String.fromCharCode(e.which).toUpperCase();
-            if (e.which === 17) {
+            if (e.which === CTRL) {
                 self.scheduling();
             }
             self.press(key);
@@ -71,7 +69,7 @@ Pad.prototype = {
         window.onkeyup = function (e) {
             try {
                 var key = String.fromCharCode(e.which).toUpperCase();
-                if (e.which === 17) {
+                if (e.which === CTRL) {
                     self.clear();
                     self.schedule();
                 } else if (/[a-zA-Z0-9-_ ]/.test(key)) {
@@ -101,7 +99,6 @@ Pad.prototype = {
         'use strict';
         var j;
         try {
-            this.className =  this.div.getAttribute("class");
             this.div.setAttribute("class", this.className + " scheduling");
             for (j = 0; j < this.size; j++) {
                 this.tiles[j].scheduling();

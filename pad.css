@@ -72,10 +72,10 @@ body, html {
     margin-bottom: 9px;
     position: relative;
     border-bottom-width: 1px; }
-  .tile.playable {
+  .tile.playable, .tile.scheduling {
     background-color: #6666FF;
     border-bottom-color: #4040A1; }
-    .tile.playable:hover {
+    .tile.playable:hover, .tile.scheduling:hover {
       -webkit-box-shadow: 0 0 10px #6666FF ;
       -moz-box-shadow: 0 0 10px #6666FF ;
       box-shadow: 0 0 10px #6666FF ; }
