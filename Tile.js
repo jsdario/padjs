@@ -19,6 +19,7 @@ function Tile(pad, div) {
     self.div.onmousedown = function (e) {
         /* Escuchadores de shortcut */
         if (e.which === 1) {
+            self.notify('play');
             self.play();
             if (self.pad.state !== 'pressed') {
                 window.onkeydown  = function (event) {
@@ -26,11 +27,15 @@ function Tile(pad, div) {
                 };
                 window.onkeyup = null;
             }
+            if (self.scheduler && self.scheduler.started) {
+                self.clear();
+            }
         }
     };
     self.div.onmouseup = function (e) {
         if (e.which === 1) {
             window.onkeypress = null;
+            self.notify('stop');
             self.pad.listen();
             self.stop();
         }
@@ -51,15 +56,9 @@ Tile.prototype = {
     free: function (now) {
         'use strict';
         if (this.track) {
-            switch (this.state) {
-                case 'scheduling':
-                    this.div.setAttribute("class", "tile scheduling");
-                    break;
-                case 'scheduled':
-                    this.div.setAttribute("class", "tile scheduled");
-                    break;
-                default:
-                    this.div.setAttribute("class", "tile playable");
+            this.div.setAttribute("class", "tile playable");
+            if(this.scheduler) {
+                this.div.setAttribute("class", "tile scheduling");
             }
             if(!now && !this.player.paused) {
                 this.div.setAttribute("class", "tile playing");
@@ -137,6 +136,32 @@ Tile.prototype = {
             this.lt.id = key;
             this.lt.innerHTML = key;
             this.pad.tiles[key] = this;
+        }
+    },
+    clear: function () {
+        'use strict';
+        if (this.scheduler) {
+            console.log('Tile.clear()');
+            this.scheduler.clear();
+            this.free();
+        }
+    },
+    schedule: function () {
+        'use strict';
+        if(this.track) {
+            if (this.scheduler) {
+                this.scheduler.start();
+            } else {
+                this.scheduler = new Scheduler(this);
+                this.div.setAttribute("class", "tile scheduling");
+            }
+        }
+    },
+    notify: function (action) {
+        'use strict';
+        if (this.scheduler) {
+            console.log(now() + ' #Tile.notify: ' + action.toString());
+            this.scheduler.notify({time: now(), action: action});
         }
     },
     listenDragAndDrop: function () {

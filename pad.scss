@@ -52,10 +52,6 @@ body, html {
             height: 25%;
         }
     }
-
-    &.scheduling {
-        border: solid 3px $purple_tile;
-    }
 }
 
 .tile {
@@ -100,12 +96,6 @@ body, html {
         @include tile-color($selectable_tile, $selectable_tile_dark);
     }
     &.scheduling {
-        @extend .playable;
-        &:hover {
-            @include tile-color($purple_tile, $purple_tile_dark);
-        }
-    }
-    &.scheduled {
         @include tile-color($purple_tile, $purple_tile_dark);
     }
 }

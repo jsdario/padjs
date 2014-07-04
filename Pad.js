@@ -1,5 +1,5 @@
 /*jslint plusplus: true */
-/*global FileReader, Audio, Tile, console*/
+/*global FileReader, Audio, Tile, console, Scheduler*/
 
 var CTRL = 17;
 
@@ -53,22 +53,26 @@ Pad.prototype = {
             this.tiles[key].stop();
         }
     },
+    schedule: function () {
+        'use strict';
+        var j;
+        for (j = 0; j < this.tiles.length; j++) {
+            this.tiles[j].schedule();
+        }
+    },
     listen: function () {
         'use strict';
         var j, self;
         self  = this;
         window.onkeydown = function (e) {
             var key = String.fromCharCode(e.which).toUpperCase();
-            if (e.which === CTRL) {
-                console.log('CTRL pressed');
-            }
             self.press(key);
         };
         window.onkeyup = function (e) {
             try {
                 var key = String.fromCharCode(e.which).toUpperCase();
                 if (e.which === CTRL) {
-                    console.log('CTRL freed');
+                    self.schedule();
                 } else if (/[a-zA-Z0-9-_ ]/.test(key)) {
                     self.free(key);
                 }
