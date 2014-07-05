@@ -53,11 +53,25 @@ Pad.prototype = {
             this.tiles[key].stop();
         }
     },
-    schedule: function () {
+    addScheduler: function () {
         'use strict';
         var j;
         for (j = 0; j < this.tiles.length; j++) {
-            this.tiles[j].schedule();
+            this.tiles[j].addScheduler();
+        }
+    },
+    removeScheduler: function () {
+        'use strict';
+        var j;
+        for (j = 0; j < this.tiles.length; j++) {
+            this.tiles[j].removeScheduler();
+        }
+    },
+    startScheduler: function () {
+        'use strict';
+        var j;
+        for (j = 0; j < this.tiles.length; j++) {
+            this.tiles[j].startScheduler();
         }
     },
     listen: function () {
@@ -66,13 +80,17 @@ Pad.prototype = {
         self  = this;
         window.onkeydown = function (e) {
             var key = String.fromCharCode(e.which).toUpperCase();
+            if (e.which === CTRL) {
+                self.addScheduler();
+            }
             self.press(key);
         };
         window.onkeyup = function (e) {
             try {
                 var key = String.fromCharCode(e.which).toUpperCase();
                 if (e.which === CTRL) {
-                    self.schedule();
+                    self.removeScheduler();
+                    self.startScheduler();
                 } else if (/[a-zA-Z0-9-_ ]/.test(key)) {
                     self.free(key);
                 }
@@ -82,6 +100,7 @@ Pad.prototype = {
         };
         window.onblur = function () {
             console.log('Page blurred');
+            self.removeScheduler();
         };
     }
 };

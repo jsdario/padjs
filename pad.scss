@@ -95,7 +95,7 @@ body, html {
     &.selectable {
         @include tile-color($selectable_tile, $selectable_tile_dark);
     }
-    &.scheduling {
+    &.scheduling, &.scheduled, &.waiting {
         @include tile-color($purple_tile, $purple_tile_dark);
     }
 }

@@ -39,17 +39,15 @@ Scheduler.prototype = {
         self.timeouts.push(setTimeout(function () {
             if (event.action === 'play') {
                 self.tile.play();
-            } else {
+            } else if (event.action === 'stop'){
                 self.tile.stop();
             }
         }, event.time));
         self.intervals.push(setInterval(function () {
             self.timeouts.push(setTimeout(function () {
                 if (event.action === 'play') {
-                    console.log('playing');
                     self.tile.play();
-                } else {
-                    console.log('stoppping');
+                } else if (event.action === 'stop') {
                     self.tile.stop();
                 }
             }, event.time));

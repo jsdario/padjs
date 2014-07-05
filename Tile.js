@@ -19,6 +19,7 @@ function Tile(pad, div) {
     self.div.onmousedown = function (e) {
         /* Escuchadores de shortcut */
         if (e.which === 1) {
+            self.clear();
             self.notify('play');
             self.play();
             if (self.pad.state !== 'pressed') {
@@ -26,9 +27,6 @@ function Tile(pad, div) {
                     self.assign(event);
                 };
                 window.onkeyup = null;
-            }
-            if (self.scheduler && self.scheduler.started) {
-                self.clear();
             }
         }
     };
@@ -57,8 +55,8 @@ Tile.prototype = {
         'use strict';
         if (this.track) {
             this.div.setAttribute("class", "tile playable");
-            if(this.scheduler) {
-                this.div.setAttribute("class", "tile scheduling");
+            if(this.state !== null) {
+                this.div.setAttribute("class", "tile " + this.state);
             }
             if(!now && !this.player.paused) {
                 this.div.setAttribute("class", "tile playing");
@@ -140,30 +138,49 @@ Tile.prototype = {
     },
     clear: function () {
         'use strict';
-        if (this.scheduler) {
+        if (this.state === 'scheduled') {
             console.log('Tile.clear()');
             this.scheduler.clear();
+            this.state = null;
             this.free();
         }
     },
-    schedule: function () {
+    addScheduler: function () {
         'use strict';
-        if(this.track) {
-            if (this.state === 'scheduling') {
-                this.scheduler.start();
-                this.state = 'scheduled';
-            } else {
-                this.state = 'scheduling';
-                this.scheduler = new Scheduler(this);
-                this.div.setAttribute("class", "tile scheduling");
-            }
+        if (this.track && this.state !== 'scheduled') {
+            this.div.setAttribute("class", "tile waiting");
+            this.state = 'waiting';
+        }
+    },
+    removeScheduler: function () {
+        'use strict';
+        if (this.track) {
+            if (this.state === 'waiting') {
+                this.state = null;
+                this.free();
+            }   
+        }
+    },
+    startScheduler: function () {
+        'use strict';
+        if (this.track && this.state === 'scheduling') {
+            this.state = 'scheduled';
+            this.scheduler.start();
+            this.free();
         }
     },
     notify: function (action) {
         'use strict';
-        if (this.scheduler) {
-            console.log(now() + ' #Tile.notify: ' + action.toString());
-            this.scheduler.notify({time: now(), action: action});
+        if (this.track) {
+            if (this.state === 'scheduling') {
+                console.log(now() + ' #Tile.notify: ' + action.toString());
+                this.scheduler.notify({time: now(), action: action});
+            } else if (this.state === 'waiting'){
+                this.scheduler = new Scheduler(this);
+                this.scheduler.notify({time: now(), action: action});
+                this.pad.removeScheduler(this);
+                this.state = 'scheduling';
+            }
         }
     },
     listenDragAndDrop: function () {
