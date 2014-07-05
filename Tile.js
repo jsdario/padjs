@@ -149,9 +149,11 @@ Tile.prototype = {
     schedule: function () {
         'use strict';
         if(this.track) {
-            if (this.scheduler) {
+            if (this.state === 'scheduling') {
                 this.scheduler.start();
+                this.state = 'scheduled';
             } else {
+                this.state = 'scheduling';
                 this.scheduler = new Scheduler(this);
                 this.div.setAttribute("class", "tile scheduling");
             }

@@ -20,6 +20,7 @@ function Scheduler(tile) {
 Scheduler.prototype = {
     clear: function () {
         'use strict';
+        console.log('clearing '+ this.events.length + ' plans');
         this.intervals.map(clearInterval);
         this.timeouts.map(clearTimeout);
         this.tile.scheduler = null;
@@ -42,16 +43,18 @@ Scheduler.prototype = {
                 self.tile.stop();
             }
         }, event.time));
-        console.log('scheduled event:' + event);
         self.intervals.push(setInterval(function () {
             self.timeouts.push(setTimeout(function () {
                 if (event.action === 'play') {
+                    console.log('playing');
                     self.tile.play();
                 } else {
+                    console.log('stoppping');
                     self.tile.stop();
                 }
             }, event.time));
         }, frequency));
+        console.log('scheduled event:' + event);
     },
     start: function () {
         'use strict';
@@ -60,9 +63,9 @@ Scheduler.prototype = {
         frequency = tstop - this.tstart;
         if (this.events.length > 0) {
             this.started = true;
-            console.log('Starting schedule each ' + frequency + 'ms');
+            console.log('Starting '+ this.events.length +' plans each ' + frequency + 'ms');
             for(j = 0; j < this.events.length; j++) {
-                this.events[j].time -= tstop;
+                this.events[j].time -= this.tstart;
                 this.plan(this.events[j], frequency);
             }
         } else {
