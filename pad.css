@@ -86,13 +86,27 @@ body, html {
       box-shadow: 0 0 10px #FFCC00 ; }
     .tile.playing .lt {
       text-shadow: 0 0 10px white; }
-  .tile.looping {
+  .tile.settings {
     background-color: #00CC66;
     border-bottom-color: #0DA128; }
-    .tile.looping:hover {
+    .tile.settings:hover {
       -webkit-box-shadow: 0 0 10px #00CC66 ;
       -moz-box-shadow: 0 0 10px #00CC66 ;
       box-shadow: 0 0 10px #00CC66 ; }
+    .tile.settings .volumen {
+      position: relative;
+      width: 100%;
+      height: 85%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url('img/vol.png'); }
+    .tile.settings .vol-bar {
+      height: 3px;
+      width: 100px;
+      margin-left: 30px;
+      border-radius: 3%;
+      background-color: black;
+      background-color: #231F20; }
   .tile.selectable {
     background-color: #DD4B39;
     border-bottom-color: #C52F24; }

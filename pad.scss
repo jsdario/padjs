@@ -89,8 +89,22 @@ body, html {
             text-shadow: 0 0 10px white;
         }
     }
-    &.looping {
+    &.settings {
         @include tile-color($green_tile, $green_tile_dark);
+        .volumen {
+            position:relative;
+            width: 100%; height: 85%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('img/vol.png');
+        }
+        .vol-bar {
+            height: 3px; width: 100px;
+            margin-left: 30px;
+            border-radius: 3%;
+            background-color: black;
+            background-color: #231F20;
+        }
     }
     &.selectable {
         @include tile-color($selectable_tile, $selectable_tile_dark);

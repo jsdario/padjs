@@ -15,6 +15,13 @@ function Tile(pad, div) {
     self.lt  = null;
     self.track  = null;
     self.player = null;
+    /* Volume settings */
+    self.vol  = document.createElement('div');
+    self.div.appendChild(self.vol);
+    self.vol.className = 'volumen';
+    self.bar  = document.createElement('div');
+    self.div.appendChild(self.bar);
+    self.bar.className = 'vol-bar';
     /* Funciones */
     self.div.onmousedown = function (e) {
         /* Escuchadores de shortcut */
@@ -39,9 +46,12 @@ function Tile(pad, div) {
         }
     };
     self.div.oncontextmenu = function (e) {
-        self.stop();
-        /* Aqui va el menu de opciones, de momento, volumen */
-        console.log('tile options here!');
+        /* Remove all other volume bindings */
+        var j;
+        for(j = 0; j < self.pad.tiles.length; j++) {
+            self.pad.tiles[j].free();
+        }
+        self.settings();
         e.preventDefault();
         e.stopPropagation();
         return false;
@@ -55,12 +65,13 @@ Tile.prototype = {
         'use strict';
         if (this.track) {
             this.div.setAttribute("class", "tile playable");
-            if(this.state !== null) {
+            if(this.state) {
                 this.div.setAttribute("class", "tile " + this.state);
             }
             if(!now && !this.player.paused) {
                 this.div.setAttribute("class", "tile playing");
             }
+            this.div.onmousemove = null;
         } else {
             this.div.setAttribute("class", "tile");
         }
@@ -100,7 +111,6 @@ Tile.prototype = {
     load: function (track) {
         'use strict';
         var self = this;
-        self.track = track;
         if (self.player === null) {
             self.player = new Audio(track);
             self.div.appendChild(self.player);
@@ -109,6 +119,7 @@ Tile.prototype = {
         }
         self.player.onloadeddata = function () {
             self.div.setAttribute("class", "tile playable");
+            self.track = track;
         };
     },
     assign: function (key) {
@@ -210,5 +221,20 @@ Tile.prototype = {
             e.preventDefault();
             return false;
         };
+    }, 
+    settings: function () {
+        'use strict';
+        var self = this;
+        if (this.track) {
+            self.div.setAttribute('class', 'tile settings');
+            self.div.onmousemove = function (e) {
+                var volume, bottom;
+                bottom = self.div.offsetTop + self.div.offsetHeight;
+                volume = bottom - e.pageY;
+                volume = volume < 0 ? 0 : volume;
+                self.player.volume = volume * 0.01;
+                self.bar.style.width = self.player.volume * 100 + 'px';
+            };
+        }
     }
 };
