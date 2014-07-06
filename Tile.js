@@ -49,9 +49,9 @@ function Tile(pad, div) {
         /* Remove all other volume bindings */
         var j;
         for(j = 0; j < self.pad.tiles.length; j++) {
-            self.pad.tiles[j].free();
+            self.pad.tiles[j].hideSettings();
         }
-        self.settings();
+        self.showSettings();
         e.preventDefault();
         e.stopPropagation();
         return false;
@@ -64,14 +64,15 @@ Tile.prototype = {
     free: function (now) {
         'use strict';
         if (this.track) {
-            this.div.setAttribute("class", "tile playable");
-            if(this.state) {
-                this.div.setAttribute("class", "tile " + this.state);
+            if (!this.settings) {
+                this.div.setAttribute("class", "tile playable");
+                if(this.state) {
+                    this.div.setAttribute("class", "tile " + this.state);
+                }
+                if(!now && !this.player.paused) {
+                    this.div.setAttribute("class", "tile playing");
+                }
             }
-            if(!now && !this.player.paused) {
-                this.div.setAttribute("class", "tile playing");
-            }
-            this.div.onmousemove = null;
         } else {
             this.div.setAttribute("class", "tile");
         }
@@ -89,7 +90,9 @@ Tile.prototype = {
                 this.player.currentTime = 0;
             }
             this.player.play();
-            this.div.setAttribute("class", "tile playing");
+            if(!this.settings) {
+                this.div.setAttribute("class", "tile playing");
+            }
         } else {
             this.div.setAttribute("class", "tile pressed");
         }
@@ -149,7 +152,9 @@ Tile.prototype = {
     },
     clear: function () {
         'use strict';
-        if (this.state === 'scheduled') {
+        if (this.settings) {
+            this.hideSettings();
+        } else if (this.state === 'scheduled') {
             console.log('Tile.clear()');
             this.scheduler.clear();
             this.state = null;
@@ -222,10 +227,11 @@ Tile.prototype = {
             return false;
         };
     }, 
-    settings: function () {
+    showSettings: function () {
         'use strict';
         var self = this;
-        if (this.track) {
+        if (self.track) {
+            self.settings = true;
             self.div.setAttribute('class', 'tile settings');
             self.div.onmousemove = function (e) {
                 var volume, bottom;
@@ -235,6 +241,14 @@ Tile.prototype = {
                 self.player.volume = volume * 0.01;
                 self.bar.style.width = self.player.volume * 100 + 'px';
             };
+        }
+    },
+    hideSettings: function () {
+        'use strict';
+        if(this.track) {
+            this.div.onmousemove = null;
+            this.settings = false;
+            this.free();
         }
     }
 };
