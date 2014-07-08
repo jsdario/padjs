@@ -2,6 +2,8 @@
 /*jslint white: true */
 /*global FileReader, Audio, console, Scheduler, now*/
 var LONG_SAMPLE_TIME = 2;
+var LEFT_CLICK  = 1;
+var RIGHT_CLICK = 3;
 
 function Tile(pad, div) {
     'use strict';
@@ -25,7 +27,7 @@ function Tile(pad, div) {
     /* Funciones */
     self.div.onmousedown = function (e) {
         /* Escuchadores de shortcut */
-        if (e.which === 1) {
+        if (e.which === LEFT_CLICK) {
             self.clear();
             self.notify('play');
             self.play();
@@ -35,23 +37,21 @@ function Tile(pad, div) {
                 };
                 window.onkeyup = null;
             }
+        } else if (e.which === RIGHT_CLICK) {
+            self.showSettings();
         }
     };
     self.div.onmouseup = function (e) {
-        if (e.which === 1) {
+        if (e.which === LEFT_CLICK) {
             window.onkeypress = null;
             self.notify('stop');
             self.pad.listen();
             self.stop();
+        }  else if (e.which === RIGHT_CLICK) {
+            self.hideSettings();
         }
     };
     self.div.oncontextmenu = function (e) {
-        /* Remove all other volume bindings */
-        var j;
-        for(j = 0; j < self.pad.tiles.length; j++) {
-            self.pad.tiles[j].hideSettings();
-        }
-        self.showSettings();
         e.preventDefault();
         e.stopPropagation();
         return false;
@@ -87,6 +87,7 @@ Tile.prototype = {
                 }, false);
             } else {
                 /* Rebobinar al volver a pulsar */
+                this.player.pause();
                 this.player.currentTime = 0;
             }
             this.player.play();
@@ -163,15 +164,17 @@ Tile.prototype = {
     },
     addScheduler: function () {
         'use strict';
-        if (this.track && this.state !== 'scheduled') {
+        if (this.player && this.state !== 'scheduled') {
             this.div.setAttribute("class", "tile waiting");
+            this.scheduler = new Scheduler(this);
             this.state = 'waiting';
         }
     },
     removeScheduler: function () {
         'use strict';
-        if (this.track) {
+        if (this.player) {
             if (this.state === 'waiting') {
+                this.scheduler.clear();
                 this.state = null;
                 this.free();
             }   
@@ -179,7 +182,7 @@ Tile.prototype = {
     },
     startScheduler: function () {
         'use strict';
-        if (this.track && this.state === 'scheduling') {
+        if (this.player && this.state === 'scheduling') {
             this.state = 'scheduled';
             this.scheduler.start();
             this.free();
@@ -187,16 +190,12 @@ Tile.prototype = {
     },
     notify: function (action) {
         'use strict';
-        if (this.track) {
-            if (this.state === 'scheduling') {
-                console.log(now() + ' #Tile.notify: ' + action.toString());
-                this.scheduler.notify({time: now(), action: action});
-            } else if (this.state === 'waiting'){
-                this.scheduler = new Scheduler(this);
-                this.scheduler.notify({time: now(), action: action});
-                this.pad.removeScheduler(this);
+        if (this.scheduler) {
+            console.log(now() + ' #Tile.notify: ' + action.toString());
+            if (this.state === 'waiting'){
                 this.state = 'scheduling';
             }
+            this.scheduler.notify({time: now(), action: action});
         }
     },
     listenDragAndDrop: function () {
@@ -229,9 +228,10 @@ Tile.prototype = {
     }, 
     showSettings: function () {
         'use strict';
-        var self = this;
-        if (self.track) {
-            self.settings = true;
+        var j, self;
+        self = this;
+        if (self.player) {
+            this.settings = true;
             self.div.setAttribute('class', 'tile settings');
             self.div.onmousemove = function (e) {
                 var volume, bottom;
@@ -245,7 +245,7 @@ Tile.prototype = {
     },
     hideSettings: function () {
         'use strict';
-        if(this.track) {
+        if(this.player) {
             this.div.onmousemove = null;
             this.settings = false;
             this.free();

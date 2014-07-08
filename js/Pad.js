@@ -44,6 +44,7 @@ Pad.prototype = {
         this.state = 'pressed';
         if (this.tiles[key]) {
             this.tiles[key].play();
+            this.tiles[key].notify('play');
         }
     },
     free: function (key) {
@@ -51,11 +52,13 @@ Pad.prototype = {
         this.state = null;
         if (this.tiles[key]) {
             this.tiles[key].stop();
+            this.tiles[key].notify('stop');
         }
     },
     addScheduler: function () {
         'use strict';
         var j;
+        this.state = 'waiting';
         for (j = 0; j < this.tiles.length; j++) {
             this.tiles[j].addScheduler();
         }
@@ -63,6 +66,7 @@ Pad.prototype = {
     removeScheduler: function () {
         'use strict';
         var j;
+        this.state = null;
         for (j = 0; j < this.tiles.length; j++) {
             this.tiles[j].removeScheduler();
         }
@@ -99,14 +103,13 @@ Pad.prototype = {
             }
         };
         window.onblur = function () {
-            console.log('Page blurred');
             self.removeScheduler();
         };
     }
 };
 
 var pad = new Pad(3);
-pad.tiles[0].load('presets/upallnight.mp3');
-pad.tiles[1].load('presets/clhat.wav');
-pad.tiles[3].load('presets/hohey.mp3');
-pad.tiles[4].load('presets/pray.mp3');
+pad.tiles[0].load('presets/snare.wav');
+pad.tiles[1].load('presets/kick.wav');
+pad.tiles[3].load('presets/clhat.wav');
+pad.tiles[4].load('presets/clap.wav');

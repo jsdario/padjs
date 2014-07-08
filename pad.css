@@ -7,8 +7,9 @@ body, html {
   width: 100%; }
 
 #pad {
-  margin: 30px;
   padding: 8px;
+  margin: auto;
+  margin-top: 20px;
   display: block;
   border-radius: 4px;
   background-color: #D2D2D3;
@@ -57,8 +58,8 @@ body, html {
   background-color: #999999;
   transition: all 0.2s ease; }
   .tile .lt {
-    font-size: 3em;
     color: white;
+    font-size: 3em;
     font-family: Helvetica;
     text-align: center; }
   .tile:hover {

@@ -11,7 +11,7 @@ function Scheduler(tile) {
     'use strict';
     this.tile = tile;
     this.events = [];
-    this.tstart = null;
+    this.tstart = now();
     this.intervals = [];
     this.timeouts  = [];
     console.log('Scheduler(): constructor');
@@ -27,9 +27,6 @@ Scheduler.prototype = {
     },
     notify: function (event) {
         'use strict';
-        if (!this.tstart) {
-            this.tstart = now();
-        }
         this.events.push(event);
     },
     plan: function (event, frequency) {
@@ -56,11 +53,9 @@ Scheduler.prototype = {
     },
     start: function () {
         'use strict';
-        var j, tstop, frequency;
-        tstop = now();
-        frequency = tstop - this.tstart;
+        var j, frequency;
+        frequency = now() - this.tstart;
         if (this.events.length > 0) {
-            this.started = true;
             console.log('Starting '+ this.events.length +' plans each ' + frequency + 'ms');
             for(j = 0; j < this.events.length; j++) {
                 this.events[j].time -= this.tstart;

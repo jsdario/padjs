@@ -12,8 +12,9 @@ body, html {
 }
 
 #pad {
-    margin: 30px;
     padding: 8px;
+    margin: auto;
+    margin-top: 20px;
     display: block;
     border-radius: 4px;
     background-color: $pad_bg;
@@ -65,8 +66,8 @@ body, html {
     background-color: $inactive_tile;
     transition: all 0.2s ease;
     .lt {
-        font-size: 3em;
         color:   white;
+        font-size: 3em;
         font-family: Helvetica;
         text-align: center;
     }
