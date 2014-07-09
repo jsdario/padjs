@@ -92,7 +92,7 @@ Tile.prototype = {
             }
             this.player.play();
             if(!this.settings) {
-                this.div.setAttribute("class", "tile playing");
+                this.div.setAttribute("class", "tile pressed playing");
             }
         } else {
             this.div.setAttribute("class", "tile pressed");

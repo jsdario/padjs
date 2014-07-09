@@ -3,6 +3,30 @@
 
 var CTRL = 17;
 
+function PadControls(pad) {
+    'use strict';
+    var loop, schedule, volume;
+    this.div = document.createElement('div');
+    this.div.className = 'controls';
+    pad.div.appendChild(this.div);
+    /* Loop */
+    loop = document.createElement('div');
+    loop.className = 'playing btn';
+    this.div.appendChild(loop);
+    loop.innerHTML = 'loop';
+    /* Sched */
+    schedule = document.createElement('div');
+    schedule.className = 'scheduling btn';
+    this.div.appendChild(schedule);
+    schedule.innerHTML = 'schedule';
+    /* Volume */
+    volume = document.createElement('div');
+    volume.className = 'settings btn';
+    this.div.appendChild(volume);
+    volume.innerHTML = 'volume';
+    
+}
+
 function Pad(N) {
     'use strict';
     var j, n, row, tile, self;
@@ -31,6 +55,8 @@ function Pad(N) {
                 this.tiles[n + j * N] = new Tile(self, tile);
             }
         }
+        /* Añadir controles */
+        this.controls = new PadControls(this);
         this.listen();
     } catch (e) {
         window.alert(e);

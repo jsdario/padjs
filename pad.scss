@@ -84,7 +84,6 @@ body, html {
         @include tile-color($playable_tile, $playable_tile_dark);
     }
     &.playing {
-        @extend .pressed;
         @include tile-color($playing_tile, $playing_tile_dark);
         .lt {
             text-shadow: 0 0 10px white;
@@ -112,5 +111,23 @@ body, html {
     }
     &.scheduling, &.scheduled, &.waiting {
         @include tile-color($purple_tile, $purple_tile_dark);
+    }
+}
+
+.controls {
+    @extend .row;
+    border-radius: inherit;
+    left: -8px;
+    position: relative;
+    padding: 0 8px 0 8px;
+    height: auto !important;
+    background-color: $pad_bg;
+    .btn {
+        @extend .tile;
+        padding: 5px 0 5px 0;
+        height: 20px !important;
+        font-family: Helvetica;
+        text-align: center;
+        font-size: 1em;
     }
 }
