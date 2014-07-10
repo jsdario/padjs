@@ -66,11 +66,13 @@ body, html {
     -webkit-box-shadow: 0 0 10px #999999 ;
     -moz-box-shadow: 0 0 10px #999999 ;
     box-shadow: 0 0 10px #999999 ; }
-  .tile.pressed, .controls .pressed.btn {
+  .tile.pressed, .controls .pressed.btn, .tile:active, .controls .btn:active {
     top: 3px;
     margin-bottom: 9px;
     position: relative;
     border-bottom-width: 1px; }
+    .tile.pressed .lt, .tile.pressed .controls .pressed.btn, .controls .tile.pressed .pressed.btn, .tile:active .lt, .tile:active .controls .btn:active, .controls .tile:active .btn:active {
+      text-shadow: 0 0 10px white; }
   .tile.playable, .controls .playable.btn {
     background-color: #6666FF;
     border-bottom-color: #4040A1; }
@@ -85,8 +87,6 @@ body, html {
       -webkit-box-shadow: 0 0 10px #FFCC00 ;
       -moz-box-shadow: 0 0 10px #FFCC00 ;
       box-shadow: 0 0 10px #FFCC00 ; }
-    .tile.playing .lt, .tile.playing .controls .playing.btn, .controls .tile.playing .playing.btn {
-      text-shadow: 0 0 10px white; }
   .tile.settings, .controls .settings.btn {
     background-color: #00CC66;
     border-bottom-color: #0DA128; }
@@ -131,10 +131,14 @@ body, html {
   height: auto !important;
   background-color: #D2D2D3; }
   .controls .btn {
-    padding: 5px 0 5px 0;
+    padding: 10px 0 10px 0;
     height: 20px !important;
     font-family: Helvetica;
     text-align: center;
-    font-size: 1em; }
+    font-size: 1em;
+    color: white;
+    font-weight: 800; }
+    .controls .btn.pressed, .controls .btn:hover {
+      text-shadow: 0 0 10px white; }
 
 /*# sourceMappingURL=pad.css.map */

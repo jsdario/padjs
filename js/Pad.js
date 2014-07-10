@@ -1,31 +1,7 @@
 /*jslint plusplus: true */
-/*global FileReader, Audio, Tile, console, Scheduler*/
+/*global FileReader, Audio, Tile, console, Scheduler, PadControls*/
 
 var CTRL = 17;
-
-function PadControls(pad) {
-    'use strict';
-    var loop, schedule, volume;
-    this.div = document.createElement('div');
-    this.div.className = 'controls';
-    pad.div.appendChild(this.div);
-    /* Loop */
-    loop = document.createElement('div');
-    loop.className = 'playing btn';
-    this.div.appendChild(loop);
-    loop.innerHTML = 'loop';
-    /* Sched */
-    schedule = document.createElement('div');
-    schedule.className = 'scheduling btn';
-    this.div.appendChild(schedule);
-    schedule.innerHTML = 'schedule';
-    /* Volume */
-    volume = document.createElement('div');
-    volume.className = 'settings btn';
-    this.div.appendChild(volume);
-    volume.innerHTML = 'volume';
-    
-}
 
 function Pad(N) {
     'use strict';
@@ -104,6 +80,22 @@ Pad.prototype = {
             this.tiles[j].startScheduler();
         }
     },
+    selectTile: function (tile) {
+        'use strict';
+        var j;
+        if (!tile) {
+            console.log('Setting up tiles to be selected');
+            for (j = 0; j < this.tiles.length; j++) {
+                this.tiles[j].selectTile = true;
+            }
+        } else {
+            console.log('Removing tile selectors');
+            this.controls.onSelectedTile(tile);
+            for (j = 0; j < this.tiles.length; j++) {
+                this.tiles[j].selectTile = false;
+            }
+        }
+    },
     listen: function () {
         'use strict';
         var j, self;
@@ -139,3 +131,4 @@ pad.tiles[0].load('presets/snare.wav');
 pad.tiles[1].load('presets/kick.wav');
 pad.tiles[3].load('presets/clhat.wav');
 pad.tiles[4].load('presets/clap.wav');
+pad.tiles[2].load('presets/hohey.mp3');

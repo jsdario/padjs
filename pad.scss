@@ -74,20 +74,20 @@ body, html {
     &:hover {
         @include box-shadow(0, 0, 10px, $inactive_tile);
     }
-    &.pressed {
+    &.pressed, &:active {
         top: 3px;
         margin-bottom: 9px;
         position: relative;
         border-bottom-width: 1px;
+        .lt {
+            text-shadow: 0 0 10px white;
+        }
     }
     &.playable {
         @include tile-color($playable_tile, $playable_tile_dark);
     }
     &.playing {
         @include tile-color($playing_tile, $playing_tile_dark);
-        .lt {
-            text-shadow: 0 0 10px white;
-        }
     }
     &.settings {
         @include tile-color($green_tile, $green_tile_dark);
@@ -124,10 +124,15 @@ body, html {
     background-color: $pad_bg;
     .btn {
         @extend .tile;
-        padding: 5px 0 5px 0;
+        padding: 10px 0 10px 0;
         height: 20px !important;
         font-family: Helvetica;
         text-align: center;
         font-size: 1em;
+        color: white;
+        font-weight: 800;
+        &.pressed, &:hover {
+            text-shadow: 0 0 10px white;
+        }
     }
 }

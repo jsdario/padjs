@@ -17,6 +17,7 @@ function Tile(pad, div) {
     self.lt  = null;
     self.track  = null;
     self.player = null;
+    this.looping = null;
     /* Volume settings */
     self.vol  = document.createElement('div');
     self.div.appendChild(self.vol);
@@ -27,27 +28,27 @@ function Tile(pad, div) {
     /* Funciones */
     self.div.onmousedown = function (e) {
         /* Escuchadores de shortcut */
-        if (e.which === LEFT_CLICK) {
+        if (e.which !== RIGHT_CLICK) {
             self.clear();
             self.notify('play');
-            self.play();
             if (self.pad.state !== 'pressed') {
                 window.onkeydown  = function (event) {
                     self.assign(event);
                 };
                 window.onkeyup = null;
             }
-        } else if (e.which === RIGHT_CLICK) {
+            self.play();
+        } else {
             self.showSettings();
         }
     };
     self.div.onmouseup = function (e) {
-        if (e.which === LEFT_CLICK) {
+        if (e.which !== RIGHT_CLICK) {
             window.onkeypress = null;
             self.notify('stop');
             self.pad.listen();
             self.stop();
-        }  else if (e.which === RIGHT_CLICK) {
+        }  else {
             self.hideSettings();
         }
     };
@@ -63,7 +64,7 @@ Tile.prototype = {
     constructor: Tile,
     free: function (now) {
         'use strict';
-        if (this.track) {
+        if (this.player) {
             if (!this.settings) {
                 this.div.setAttribute("class", "tile playable");
                 if(this.state) {
@@ -79,7 +80,9 @@ Tile.prototype = {
     },
     play: function () {
         'use strict';
+        var self = this;
         if (this.player) {
+            console.log('Tile.play()');
             /* Looping */
             if (this.player.duration > LONG_SAMPLE_TIME) {
                 this.player.addEventListener('ended', function () {
@@ -100,7 +103,8 @@ Tile.prototype = {
     },
     stop: function () {
         'use strict';
-        if (this.player) {
+        if (this.player && !this.looping) {
+            console.log('Tile.stop()');
             if (this.player.duration > LONG_SAMPLE_TIME) {
                 this.player.currentTime = 0;
                 this.player.pause();
@@ -115,7 +119,7 @@ Tile.prototype = {
     load: function (track) {
         'use strict';
         var self = this;
-        if (self.player === null) {
+        if (!self.player) {
             self.player = new Audio(track);
             self.div.appendChild(self.player);
         } else {
@@ -123,6 +127,7 @@ Tile.prototype = {
         }
         self.player.onloadeddata = function () {
             self.div.setAttribute("class", "tile playable");
+            self.player.onloadeddata = null;
             self.track = track;
         };
     },
@@ -153,6 +158,8 @@ Tile.prototype = {
     },
     clear: function () {
         'use strict';
+        this.looping = null;
+        console.log('Tile.clear()');
         if (this.settings) {
             this.hideSettings();
         } else if (this.state === 'scheduled') {
@@ -196,6 +203,10 @@ Tile.prototype = {
                 this.state = 'scheduling';
             }
             this.scheduler.notify({time: now(), action: action});
+        }
+        if(this.selectTile) {
+            console.log('tile selected');
+            this.pad.selectTile(this);
         }
     },
     listenDragAndDrop: function () {

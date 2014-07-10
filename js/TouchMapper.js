@@ -32,6 +32,9 @@ TouchMapper.prototype.handler = function (event) {
         case "touchmove":
             type="mousemove";
             break;
+        case "touchleave":
+            type="mouseleave";
+            break;
         case "touchend":
             type="mouseup";
             break;
@@ -46,7 +49,7 @@ TouchMapper.prototype.handler = function (event) {
     simulatedEvent.initMouseEvent(type, true, true, window, 1,
                                   first.screenX, first.screenY,
                                   first.clientX, first.clientY, false,
-                                  false, false, false, button, null);
+                                  false, false, false, 0, null);
 
     first.target.dispatchEvent(simulatedEvent);
     event.preventDefault();
