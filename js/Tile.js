@@ -64,7 +64,7 @@ Tile.prototype = {
     constructor: Tile,
     free: function (now) {
         'use strict';
-        if (this.player) {
+        if (this.playable) {
             if (!this.settings) {
                 this.div.setAttribute("class", "tile playable");
                 if(this.state) {
@@ -81,7 +81,7 @@ Tile.prototype = {
     play: function () {
         'use strict';
         var self = this;
-        if (this.player) {
+        if (this.playable) {
             console.log('Tile.play()');
             /* Looping */
             if (this.player.duration > LONG_SAMPLE_TIME) {
@@ -103,7 +103,7 @@ Tile.prototype = {
     },
     stop: function () {
         'use strict';
-        if (this.player && !this.looping) {
+        if (this.playable && !this.looping) {
             console.log('Tile.stop()');
             if (this.player.duration > LONG_SAMPLE_TIME) {
                 this.player.currentTime = 0;
@@ -129,6 +129,10 @@ Tile.prototype = {
             self.div.setAttribute("class", "tile playable");
             self.player.onloadeddata = null;
             self.track = track;
+        };
+        self.player.oncanplay = function () {
+            self.player.oncanplay = null;
+            self.playable = true;
         };
     },
     assign: function (key) {
@@ -171,7 +175,7 @@ Tile.prototype = {
     },
     addScheduler: function () {
         'use strict';
-        if (this.player && this.state !== 'scheduled') {
+        if (this.playable && this.state !== 'scheduled') {
             this.div.setAttribute("class", "tile waiting");
             this.scheduler = new Scheduler(this);
             this.state = 'waiting';
@@ -179,7 +183,7 @@ Tile.prototype = {
     },
     removeScheduler: function () {
         'use strict';
-        if (this.player) {
+        if (this.playable) {
             if (this.state === 'waiting') {
                 this.scheduler.clear();
                 this.state = null;
@@ -189,7 +193,7 @@ Tile.prototype = {
     },
     startScheduler: function () {
         'use strict';
-        if (this.player && this.state === 'scheduling') {
+        if (this.playable && this.state === 'scheduling') {
             this.state = 'scheduled';
             this.scheduler.start();
             this.free();
@@ -241,7 +245,7 @@ Tile.prototype = {
         'use strict';
         var j, self;
         self = this;
-        if (self.player) {
+        if (self.playable) {
             this.settings = true;
             self.div.setAttribute('class', 'tile settings');
             self.div.onmousemove = function (e) {
@@ -256,7 +260,7 @@ Tile.prototype = {
     },
     hideSettings: function () {
         'use strict';
-        if(this.player) {
+        if(this.playable) {
             this.div.onmousemove = null;
             this.settings = false;
             this.free();
