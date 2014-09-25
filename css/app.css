@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   margin: 0;
   padding: 0; }
@@ -15,7 +16,7 @@ body, html {
   /* resto de características */
   display: block;
   border-radius: 4px;
-  background-color: #D2D2D3;
+  background-color: #d2d2d3;
   -webkit-user-select: none;
   /* Chrome/Safari */
   -moz-user-select: none;
@@ -36,12 +37,12 @@ body, html {
       #pad.small .tile, #pad.small .controls .btn, .controls #pad.small .btn {
         height: 113px;
         width: 31.6%; }
-        #pad.small .tile .lt, #pad.small .tile .controls .btn, .controls #pad.small .tile .btn {
+        #pad.small .tile .lt, #pad.small .controls .btn .lt, .controls #pad.small .btn .lt {
           padding-top: 30%; }
       #pad.grand .tile, #pad.grand .controls .btn, .controls #pad.grand .btn {
         height: 85px;
         width: 23.6%; }
-        #pad.grand .tile .lt, #pad.grand .tile .controls .btn, .controls #pad.grand .tile .btn {
+        #pad.grand .tile .lt, #pad.grand .controls .btn .lt, .controls #pad.grand .btn .lt {
           padding-top: 25%; } }
   @media only screen and (min-device-width: 515px) {
     #pad {
@@ -56,12 +57,12 @@ body, html {
       #pad.small .tile, #pad.small .controls .btn, .controls #pad.small .btn {
         height: 165px;
         width: 163px; }
-        #pad.small .tile .lt, #pad.small .tile .controls .btn, .controls #pad.small .tile .btn {
+        #pad.small .tile .lt, #pad.small .controls .btn .lt, .controls #pad.small .btn .lt {
           padding-top: 30%; }
       #pad.grand .tile, #pad.grand .controls .btn, .controls #pad.grand .btn {
         height: 120px;
         width: 120px; }
-        #pad.grand .tile .lt, #pad.grand .tile .controls .btn, .controls #pad.grand .tile .btn {
+        #pad.grand .tile .lt, #pad.grand .controls .btn .lt, .controls #pad.grand .btn .lt {
           padding-top: 25%; } }
   #pad .row, #pad .controls {
     width: 100%;
@@ -81,7 +82,7 @@ body, html {
   border-bottom-style: solid;
   background-color: #999999;
   transition: all 0.2s ease; }
-  .tile .lt, .tile .controls .btn, .controls .tile .btn {
+  .tile .lt, .controls .btn .lt {
     color: white;
     font-size: 3em;
     font-family: Helvetica;
@@ -95,37 +96,37 @@ body, html {
     margin-bottom: 9px;
     position: relative;
     border-bottom-width: 1px; }
-    .tile.pressed .lt, .tile.pressed .controls .pressed.btn, .controls .tile.pressed .pressed.btn {
+    .tile.pressed .lt, .controls .pressed.btn .lt {
       text-shadow: 0 0 10px white; }
   .tile.playable, .controls .playable.btn {
-    background-color: #6666FF;
-    border-bottom-color: #4040A1; }
+    background-color: #6666ff;
+    border-bottom-color: #4040a1; }
     .tile.playable:hover, .controls .playable.btn:hover {
-      -webkit-box-shadow: 0 0 10px #6666FF ;
-      -moz-box-shadow: 0 0 10px #6666FF ;
-      box-shadow: 0 0 10px #6666FF ; }
+      -webkit-box-shadow: 0 0 10px #6666ff ;
+      -moz-box-shadow: 0 0 10px #6666ff ;
+      box-shadow: 0 0 10px #6666ff ; }
   .tile.playing, .controls .playing.btn {
-    background-color: #FFCC00;
-    border-bottom-color: #FF7F00; }
+    background-color: #ffcc00;
+    border-bottom-color: #ff7f00; }
     .tile.playing:hover, .controls .playing.btn:hover {
-      -webkit-box-shadow: 0 0 10px #FFCC00 ;
-      -moz-box-shadow: 0 0 10px #FFCC00 ;
-      box-shadow: 0 0 10px #FFCC00 ; }
+      -webkit-box-shadow: 0 0 10px #ffcc00 ;
+      -moz-box-shadow: 0 0 10px #ffcc00 ;
+      box-shadow: 0 0 10px #ffcc00 ; }
   .tile.settings, .controls .settings.btn {
-    background-color: #00CC66;
-    border-bottom-color: #0DA128; }
+    background-color: #00cc66;
+    border-bottom-color: #0da128; }
     .tile.settings:hover, .controls .settings.btn:hover {
-      -webkit-box-shadow: 0 0 10px #00CC66 ;
-      -moz-box-shadow: 0 0 10px #00CC66 ;
-      box-shadow: 0 0 10px #00CC66 ; }
-    .tile.settings .volumen, .tile.settings .controls .settings.btn, .controls .tile.settings .settings.btn {
+      -webkit-box-shadow: 0 0 10px #00cc66 ;
+      -moz-box-shadow: 0 0 10px #00cc66 ;
+      box-shadow: 0 0 10px #00cc66 ; }
+    .tile.settings .volumen, .controls .settings.btn .volumen {
       position: relative;
       width: 100%;
       height: 85%;
       background-position: center;
       background-repeat: no-repeat;
-      background-image: url('img/vol.png'); }
-    .tile.settings .vol-bar, .tile.settings .controls .settings.btn, .controls .tile.settings .settings.btn {
+      background-image: url("img/vol.png"); }
+    .tile.settings .vol-bar, .controls .settings.btn .vol-bar {
       height: 3px;
       width: 100px;
       margin-left: 30px;
@@ -133,19 +134,19 @@ body, html {
       background-color: black;
       background-color: #231F20; }
   .tile.selectable, .controls .selectable.btn {
-    background-color: #DD4B39;
-    border-bottom-color: #C52F24; }
+    background-color: #dd4b39;
+    border-bottom-color: #c52f24; }
     .tile.selectable:hover, .controls .selectable.btn:hover {
-      -webkit-box-shadow: 0 0 10px #DD4B39 ;
-      -moz-box-shadow: 0 0 10px #DD4B39 ;
-      box-shadow: 0 0 10px #DD4B39 ; }
+      -webkit-box-shadow: 0 0 10px #dd4b39 ;
+      -moz-box-shadow: 0 0 10px #dd4b39 ;
+      box-shadow: 0 0 10px #dd4b39 ; }
   .tile.scheduling, .controls .scheduling.btn, .tile.scheduled, .controls .scheduled.btn, .tile.waiting, .controls .waiting.btn {
-    background-color: #A469B3;
+    background-color: #a469b3;
     border-bottom-color: #855391; }
     .tile.scheduling:hover, .controls .scheduling.btn:hover, .tile.scheduled:hover, .controls .scheduled.btn:hover, .tile.waiting:hover, .controls .waiting.btn:hover {
-      -webkit-box-shadow: 0 0 10px #A469B3 ;
-      -moz-box-shadow: 0 0 10px #A469B3 ;
-      box-shadow: 0 0 10px #A469B3 ; }
+      -webkit-box-shadow: 0 0 10px #a469b3 ;
+      -moz-box-shadow: 0 0 10px #a469b3 ;
+      box-shadow: 0 0 10px #a469b3 ; }
 
 .controls {
   border-radius: inherit;
@@ -153,7 +154,7 @@ body, html {
   position: relative;
   padding: 0 8px 0 8px;
   height: auto !important;
-  background-color: #D2D2D3; }
+  background-color: #d2d2d3; }
   .controls .btn {
     padding: 10px 0 10px 0;
     height: 20px !important;
@@ -165,4 +166,15 @@ body, html {
     .controls .btn.pressed, .controls .btn:hover {
       text-shadow: 0 0 10px white; }
 
-/*# sourceMappingURL=pad.css.map */
+footer {
+  width: 500px;
+  margin: 0 auto 0 auto; }
+  footer ul {
+    width: 320px;
+    display: block;
+    margin: 0 auto 0 auto; }
+    footer ul li {
+      list-style: none;
+      padding: 5px;
+      margin-left: 5px;
+      float: left; }

@@ -44,6 +44,7 @@ PadControls.prototype = {
         looper.className = 'playing btn';
         self.div.appendChild(looper);
         looper.innerHTML = 'loop';
+        looper.title = '[Clicar y arrastrar] Reproduce una pista larga en bucle';
         looper.onmouseup = function () {
             if (!CONTROL_ACTIVE) {
                 CONTROL_ACTIVE = 'true';
@@ -69,6 +70,7 @@ PadControls.prototype = {
         scheduler.className = 'scheduling btn';
         self.div.appendChild(scheduler);
         scheduler.innerHTML = 'schedule';
+        scheduler.title = "[CTRL+click] Establece un patron de reproduccion";
         scheduler.onmouseup = function () {
             if(!CONTROL_ACTIVE) {
                 CONTROL_ACTIVE = 'true';
@@ -91,6 +93,7 @@ PadControls.prototype = {
         volume.className = 'settings btn';
         self.div.appendChild(volume);
         volume.innerHTML = 'volume';
+        volume.title = "[Click derecho] Cambia el volumen de un tile moviendo el raton";
         volume.onmouseup = function () {
             if (!CONTROL_ACTIVE) {
                 CONTROL_ACTIVE = 'true';

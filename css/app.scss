@@ -1,0 +1,19 @@
+@import 'pad';
+
+footer {
+    width: 500px;
+    margin: 0 auto 0 auto;
+    ul {
+        width: 320px;
+        display:block;
+        margin: 0 auto 0 auto;
+        li {
+            list-style: none;
+            padding: 5px;
+            margin-left: 5px;
+            float: left;
+        }
+    }
+}
+
+
