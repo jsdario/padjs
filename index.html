@@ -9,9 +9,29 @@
     <body>
         <div id="pad"></div>
         <footer>
-            <br/><br/><br/>
+            <br/><br/>
+            <ol id='help-txt'>
+                Las teclas (<em>tiles</em>) grises no tienen pistas válidas para su navegador.
+                <li>Pulsa en una tecla azul para reproducir un sonido.</li>
+                <li class='blue'>Puedes hacer lo mismo tecleando los números del 0 al 9.</li>
+                <li class='blue'>Toca una letra en el teclado mientras [1] para asignársela.</li>
+                <li class='purple'>Lo que toques entre dos clicks repetidos en 'schedule' se repetirá en bucle.</li>
+                <li class='purple'>Puedes hacer [4] entre que pulsas y liberas la tecla CTRL.</li>
+                <li class='purple'>Para parar una secuencia de [4] o [5] en un <em>tile</em> hay que pinchar en él.</li>
+                <li class='green'>Puedes ajustar individualmente el volumen de una tecla pinchando en 'volume' y luego en ella.</li>
+                <li class='green'>Puedes hacer lo mismo manteniendo pulsado el botón secundario.</li>
+                <span class='yellow'>Las pistas que...</span>
+                <li class='yellow'>...duren menos de 2" se reproducirán sin pausa y terminarán.</li>
+                <li class='yellow'>...duren más de 2" se pararán y rebobinarán cuando dejes de hacerlas sonar.</li>
+                <li class='yellow'>...duren más de 2" sonarán en bucle al soltar el ratón fuera de su <em>tile</em>
+                    o al hacer click 'loop' justo antes.</li>
+                <li class='red'>Puedes cambiar un sonido o usar una tecla más arrastrando
+                    una canción desde tu pc sobre ella.</li>
+            </ol>
+            <br/>
             <hr/>
-            <ul><li>Por Jesús Rivera</li><li id='help'>Ayuda</li><li>Más Apps</li></ul>
+            <ul class='permalinks'><li>Por <a href='https://twitter.com/_jesusdario'>Jesús Darío</a></li>
+                <li><a id='help-btn' href=javascript:void(0)>Ayuda</a></li><li>Más Apps</li></ul>
         </footer>
         <script type="text/javascript" src="js/PadControls.js"></script>
         <script type="text/javascript" src="js/PadScheduler.js"></script>

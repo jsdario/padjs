@@ -1,17 +1,24 @@
 /*jslint browser: true, devel: true*/
 /*global Pad*/
 var HIDDEN = 0;
+var help = document.getElementById('help-txt');
 var pad = new Pad(3);
 
-var helpbutton = document.getElementById('help');
+var helpbutton = document.getElementById('help-btn');
 helpbutton.onclick = function (event) {
     'use strict';
     if (!HIDDEN) {
         HIDDEN = 1;
-        pad.div.style.opacity = '0';
+        help.style.height = 'auto';
+        help.style.display = 'block';
+        help.style.paddingTop = '20px';
+        helpbutton.innerHTML = 'Ocultar ayuda';
     } else {
         HIDDEN = 0;
-        pad.div.style.opacity = '1';
+        help.style.height = '0';
+        help.style.display = 'none';
+        help.style.paddingTop = '0';
+        helpbutton.innerHTML = 'Ayuda';
     }
 };
 

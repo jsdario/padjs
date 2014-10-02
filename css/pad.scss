@@ -1,21 +1,6 @@
 @import 'colors';
 @import 'mixins';
 
-* {
-    margin: 0;
-    padding: 0;
-}
-
-/* Deshabilitar el focus */
-*:focus { 
-    outline: none; 
-}
-
-body, html {
-    height: 100%;
-    width: 100%;
-}
-
 #pad {
     /* Tamanio */
     @media only screen and (max-device-width: 515px) {

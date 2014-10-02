@@ -1,10 +1,41 @@
 @import 'pad';
 
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* Deshabilitar el focus */
+*:focus { 
+    outline: none; 
+}
+
+body, html {
+    letter-spacing: -1px;
+    font-family: 'arial';
+    font-weight: bold;
+    color: #999;
+    height: 100%;
+    width: 100%;
+}
+
+a, a:visited, a:active, a:hover {
+    color: inherit;
+    font-style: none;
+    text-decoration: none;
+}
+
+hr {
+    background-color: #D2D2D3;
+    border: none;
+    height: 3px;
+}
+
 footer {
     width: 500px;
     margin: 0 auto 0 auto;
-    ul {
-        width: 320px;
+    ul, .unordered-list {
+        width: 100%;
         display:block;
         margin: 0 auto 0 auto;
         li {
@@ -13,6 +44,17 @@ footer {
             margin-left: 5px;
             float: left;
         }
+    }
+    
+    ol {
+        @extend .unordered-list;
+        display: none;
+        height: 0px;
+        .blue { color: $playable_tile; }
+        .yellow { color: $playing_tile_dark; }
+        .red { color: $selectable_tile; }
+        .purple { color: $purple_tile; }
+        .green { color: $green_tile; }
     }
 }
 
