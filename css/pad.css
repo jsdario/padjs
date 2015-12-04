@@ -1,0 +1,156 @@
+#pad {
+  /* Tamanio */
+  /* resto de características */
+  display: block;
+  border-radius: 4px;
+  background-color: #D2D2D3;
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+  -o-user-select: none;
+  user-select: none;
+  /* Size modifiers */ }
+  @media only screen and (max-device-width: 515px) {
+    #pad {
+      /* define mobile specific styles come here */
+      width: 100%;
+      height: 360px;
+      /* Size modifiers */ }
+      #pad .tile, #pad .controls .btn, .controls #pad .btn {
+        margin: 2px 2px 5px 2px; }
+      #pad.small .tile, #pad.small .controls .btn, .controls #pad.small .btn {
+        height: 113px;
+        width: 31.6%; }
+        #pad.small .tile .lt, #pad.small .tile .controls .btn, .controls #pad.small .tile .btn {
+          padding-top: 30%; }
+      #pad.grand .tile, #pad.grand .controls .btn, .controls #pad.grand .btn {
+        height: 85px;
+        width: 23.6%; }
+        #pad.grand .tile .lt, #pad.grand .tile .controls .btn, .controls #pad.grand .tile .btn {
+          padding-top: 25%; } }
+  @media only screen and (min-device-width: 515px) {
+    #pad {
+      margin: auto;
+      width: 515px;
+      height: 530px;
+      margin-top: 20px;
+      padding: 8px;
+      /* Size modifiers */ }
+      #pad .tile, #pad .controls .btn, .controls #pad .btn {
+        margin: 4px 4px 6px 4px; }
+      #pad.small .tile, #pad.small .controls .btn, .controls #pad.small .btn {
+        height: 165px;
+        width: 163px; }
+        #pad.small .tile .lt, #pad.small .tile .controls .btn, .controls #pad.small .tile .btn {
+          padding-top: 30%; }
+      #pad.grand .tile, #pad.grand .controls .btn, .controls #pad.grand .btn {
+        height: 120px;
+        width: 120px; }
+        #pad.grand .tile .lt, #pad.grand .tile .controls .btn, .controls #pad.grand .tile .btn {
+          padding-top: 25%; } }
+  #pad .row, #pad .controls {
+    width: 100%;
+    float: left;
+    display: block; }
+  #pad.small .row, #pad.small .controls {
+    height: 33%; }
+  #pad.grand .row, #pad.grand .controls {
+    height: 25%; }
+
+.tile, .controls .btn {
+  float: left;
+  display: block;
+  border-radius: 4px;
+  border-bottom-width: 3px;
+  border-bottom-color: grey;
+  border-bottom-style: solid;
+  background-color: #999999;
+  transition: all 0.2s ease; }
+  .tile .lt, .tile .controls .btn, .controls .tile .btn {
+    color: white;
+    font-size: 3em;
+    font-family: Helvetica;
+    text-align: center; }
+  .tile:hover, .controls .btn:hover {
+    -webkit-box-shadow: 0 0 10px #999999 ;
+    -moz-box-shadow: 0 0 10px #999999 ;
+    box-shadow: 0 0 10px #999999 ; }
+  .tile.pressed, .controls .pressed.btn {
+    top: 3px;
+    margin-bottom: 9px;
+    position: relative;
+    border-bottom-width: 1px; }
+    .tile.pressed .lt, .tile.pressed .controls .pressed.btn, .controls .tile.pressed .pressed.btn {
+      text-shadow: 0 0 10px white; }
+  .tile.playable, .controls .playable.btn {
+    background-color: #6666FF;
+    border-bottom-color: #4040A1; }
+    .tile.playable:hover, .controls .playable.btn:hover {
+      -webkit-box-shadow: 0 0 10px #6666FF ;
+      -moz-box-shadow: 0 0 10px #6666FF ;
+      box-shadow: 0 0 10px #6666FF ; }
+  .tile.playing, .controls .playing.btn {
+    background-color: #FFCC00;
+    border-bottom-color: #FF7F00; }
+    .tile.playing:hover, .controls .playing.btn:hover {
+      -webkit-box-shadow: 0 0 10px #FFCC00 ;
+      -moz-box-shadow: 0 0 10px #FFCC00 ;
+      box-shadow: 0 0 10px #FFCC00 ; }
+  .tile.settings, .controls .settings.btn {
+    background-color: #00CC66;
+    border-bottom-color: #0DA128; }
+    .tile.settings:hover, .controls .settings.btn:hover {
+      -webkit-box-shadow: 0 0 10px #00CC66 ;
+      -moz-box-shadow: 0 0 10px #00CC66 ;
+      box-shadow: 0 0 10px #00CC66 ; }
+    .tile.settings .volumen, .tile.settings .controls .settings.btn, .controls .tile.settings .settings.btn {
+      position: relative;
+      width: 100%;
+      height: 85%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url('img/vol.png'); }
+    .tile.settings .vol-bar, .tile.settings .controls .settings.btn, .controls .tile.settings .settings.btn {
+      height: 3px;
+      width: 100px;
+      margin-left: 30px;
+      border-radius: 3%;
+      background-color: black;
+      background-color: #231F20; }
+  .tile.selectable, .controls .selectable.btn {
+    background-color: #DD4B39;
+    border-bottom-color: #C52F24; }
+    .tile.selectable:hover, .controls .selectable.btn:hover {
+      -webkit-box-shadow: 0 0 10px #DD4B39 ;
+      -moz-box-shadow: 0 0 10px #DD4B39 ;
+      box-shadow: 0 0 10px #DD4B39 ; }
+  .tile.scheduling, .controls .scheduling.btn, .tile.scheduled, .controls .scheduled.btn, .tile.waiting, .controls .waiting.btn {
+    background-color: #A469B3;
+    border-bottom-color: #855391; }
+    .tile.scheduling:hover, .controls .scheduling.btn:hover, .tile.scheduled:hover, .controls .scheduled.btn:hover, .tile.waiting:hover, .controls .waiting.btn:hover {
+      -webkit-box-shadow: 0 0 10px #A469B3 ;
+      -moz-box-shadow: 0 0 10px #A469B3 ;
+      box-shadow: 0 0 10px #A469B3 ; }
+
+.controls {
+  border-radius: inherit;
+  left: -8px;
+  position: relative;
+  padding: 0 8px 0 8px;
+  height: auto !important;
+  background-color: #D2D2D3; }
+  .controls .btn {
+    padding: 10px 0 10px 0;
+    height: 20px !important;
+    font-family: Helvetica;
+    text-align: center;
+    font-size: 1em;
+    color: white;
+    font-weight: 800; }
+    .controls .btn.pressed, .controls .btn:hover {
+      text-shadow: 0 0 10px white; }
+
+/*# sourceMappingURL=pad.css.map */
