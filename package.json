@@ -1,0 +1,31 @@
+{
+  "name": "padjs",
+  "version": "1.0.0",
+  "description": "sampler pad with lights connected",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsdario/padjs.git"
+  },
+  "keywords": [
+    "music",
+    "sampler",
+    "pad",
+    "netbeast",
+    "iot"
+  ],
+  "author": "jesus@netbeast.co",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsdario/padjs/issues"
+  },
+  "homepage": "https://github.com/jsdario/padjs#readme",
+  "dependencies": {
+    "express": "^4.13.3",
+    "netbeast": "0.0.6"
+  },
+  "logo": "public/img/logo.png"
+}
