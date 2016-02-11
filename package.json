@@ -25,7 +25,7 @@
   "homepage": "https://github.com/jsdario/padjs#readme",
   "dependencies": {
     "express": "^4.13.3",
-    "netbeast": "0.0.6"
+    "netbeast": "^1.0.0"
   },
   "logo": "public/img/logo.png"
 }
