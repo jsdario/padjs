@@ -10,7 +10,7 @@ export default class Pad extends React.Component {
   }
 
   componentDidMount () {
-    request.get('/pad.json').end((err, res) => {
+    request.get('/i/padjs/presets').end((err, res) => {
       if (err) return console.error(err)
       this.setState({ tracks: res.body })
     })

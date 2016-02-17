@@ -18,9 +18,11 @@ app.get('/presets', function (req, res) {
   fs.readdir('./presets', function (err, files) {
     if (err) res.status(500).send(err)
 
-    files.forEach(function (file) {
-      file = 'http://' + process.env.NETBEAST + '/tracks/' + file
+    files.forEach(function (file, idx) {
+      files[idx] = 'http://' + process.env.NETBEAST + '/i/padjs/tracks/' + file
     })
+
+    res.json(files)
   })
 })
 

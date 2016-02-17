@@ -43,7 +43,7 @@ export default class Pad extends React.Component {
   }
 
   play () {
-    if (this.state.isPlayable) {
+    if (this.state.isPlayable && this.state.is !== 'playing') {
       console.log('Tile.play()')
       /* Looping */
       if (this.player.duration < LONG_SAMPLE_TIME) {
@@ -57,8 +57,8 @@ export default class Pad extends React.Component {
       }
 
       netbeast('lights').set({ color: PLAYING_COLOR })
-      netbeast('music').set({ track: this.props.track, volume: this.player.volume * 100, status: 'play' })
-      .catch((err) => { netbeast().error(err.message) })
+      netbeast('sound').set({ track: this.props.track, volume: this.player.volume * 100 })
+      .catch((err) => { if(err) netbeast().error(err.message)  })
       this.setState({ is: 'playing' })
       this.player.play()
     }
@@ -66,8 +66,8 @@ export default class Pad extends React.Component {
 
   stop () {
     netbeast('lights').set({ color: PLAYABLE_COLOR })
-    netbeast('music').set({ status: 'stop' })
-    .catch((err) => { netbeast().error(err.message) })
+    netbeast('sound').set({ status: 'stop' })
+    .catch((err) => { if(err) netbeast().error(err.message) })
     this.setState({ is: this.state.is.replace('playing', '') })
     this.player.currentTime = 0
     this.player.pause()
