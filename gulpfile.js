@@ -8,7 +8,7 @@ var watchify = require('watchify')
 
 gulp.task('default', ['serve', 'watchify'], function () {
   plugins.livereload.listen()
-  gulp.watch('./public/styles/*.scss', ['sass'])
+  gulp.watch('./styles/*.scss', ['sass'])
 })
 
 gulp.task('serve', function () {
@@ -21,14 +21,14 @@ gulp.task('serve', function () {
 gulp.task('build', ['sass', 'browserify'])
 
 gulp.task('sass', function () {
-  gulp.src('./public/styles/style.scss')
+  gulp.src('./styles/style.scss')
   .pipe(plugins.plumber())
   .pipe(plugins.sourcemaps.init())
   .pipe(plugins.sass())
   .pipe(plugins.autoprefixer())
   .pipe(plugins.cssnano())
   .pipe(plugins.sourcemaps.write('./'))
-  .pipe(gulp.dest('./public/dist/css'))
+  .pipe(gulp.dest('./public/'))
   .pipe(plugins.livereload())
 })
 
@@ -36,7 +36,7 @@ gulp.task('watchify', function () {
   // set up the browserify instance on a task basis
   var bundler = watchify(
     browserify({
-      entries: './public/components/index.jsx',
+      entries: './components/index.jsx',
       debug: true
     })
     ).transform('babelify', { presets: ['es2015', 'react'] })
@@ -48,7 +48,7 @@ gulp.task('watchify', function () {
 gulp.task('browserify', function () {
   // set up the browserify instance on a task basis
   var bundler = browserify({
-    entries: './public/components/index.jsx',
+    entries: './components/index.jsx',
     debug: true
   }).transform('babelify', { presets: ['es2015', 'react'] })
 
@@ -65,6 +65,6 @@ function compile (bundler) {
   .pipe(buffer())
   .pipe(plugins.sourcemaps.init({ loadMaps: true }))
   .pipe(plugins.sourcemaps.write('./'))
-  .pipe(gulp.dest('./public/dist/js/'))
+  .pipe(gulp.dest('./public/'))
   .pipe(plugins.livereload())
 }

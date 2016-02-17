@@ -1,0 +1,24 @@
+$pad_bg: rgb(29, 29, 29);
+
+$playable_tile: rgb(0, 233, 207);
+$playable_tile_dark: darken($playable_tile, 10%);
+
+$selectable_tile: rgb(241, 38, 76);
+$selectable_tile_dark: darken($selectable_tile, 10%);
+
+$inactive_tile: #ddd;
+
+$playing_tile: rgb(255, 232, 103);
+$playing_tile_dark: darken($playing_tile, 10%);
+
+$green_tile: rgb(0, 254, 165);
+$green_tile_dark: darken($green_tile, 10%);
+
+$purple_tile: rgb(118, 115, 191);
+$purple_tile_dark: darken($purple_tile, 10%);
+
+
+$brand_red: rgb(241, 38, 76);
+$brand_green: rgb(0, 254, 165);
+$brand_yellow: rgb(255, 232, 103);
+$brand_purple: rgb(118, 115, 191);
