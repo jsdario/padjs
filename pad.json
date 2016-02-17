@@ -1,8 +1,8 @@
 [
-    "presets/clap.wav",
-    "presets/clhat.wav",
-    "presets/hohey.mp3",
-    "presets/kick.wav",
-    "presets/pray.mp3",
-    "presets/snare.wav"
+    "http://localhost:4000/presets/clap.wav",
+    "http://localhost:4000/presets/clhat.wav",
+    "http://localhost:4000/presets/hohey.mp3",
+    "http://localhost:4000/presets/kick.wav",
+    "http://localhost:4000/presets/pray.mp3",
+    "http://localhost:4000/presets/snare.wav"
 ]
