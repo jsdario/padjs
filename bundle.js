@@ -63,7 +63,7 @@ var Pad = function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      _superagentBluebirdPromise2.default.get('/pad.json').end(function (err, res) {
+      _superagentBluebirdPromise2.default.get('/i/padjs/presets').end(function (err, res) {
         if (err) return console.error(err);
         _this2.setState({ tracks: res.body });
       });
@@ -181,7 +181,7 @@ var Pad = function (_React$Component) {
     value: function play() {
       var _this3 = this;
 
-      if (this.state.isPlayable) {
+      if (this.state.isPlayable && this.state.is !== 'playing') {
         console.log('Tile.play()');
         /* Looping */
         if (this.player.duration < LONG_SAMPLE_TIME) {
@@ -195,8 +195,8 @@ var Pad = function (_React$Component) {
         }
 
         (0, _netbeast2.default)('lights').set({ color: PLAYING_COLOR });
-        (0, _netbeast2.default)('music').set({ track: this.props.track, volume: this.player.volume * 100, status: 'play' }).catch(function (err) {
-          (0, _netbeast2.default)().error(err.message);
+        (0, _netbeast2.default)('sound').set({ track: this.props.track, volume: this.player.volume * 100 }).catch(function (err) {
+          if (err) (0, _netbeast2.default)().error(err.message);
         });
         this.setState({ is: 'playing' });
         this.player.play();
@@ -206,8 +206,8 @@ var Pad = function (_React$Component) {
     key: 'stop',
     value: function stop() {
       (0, _netbeast2.default)('lights').set({ color: PLAYABLE_COLOR });
-      (0, _netbeast2.default)('music').set({ status: 'stop' }).catch(function (err) {
-        (0, _netbeast2.default)().error(err.message);
+      (0, _netbeast2.default)('sound').set({ status: 'stop' }).catch(function (err) {
+        if (err) (0, _netbeast2.default)().error(err.message);
       });
       this.setState({ is: this.state.is.replace('playing', '') });
       this.player.currentTime = 0;
