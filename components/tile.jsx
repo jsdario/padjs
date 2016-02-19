@@ -7,6 +7,12 @@ const RIGHT_CLICK = 3
 
 const PLAYABLE_COLOR = '00E9CF'
 const PLAYING_COLOR = 'FFE867'
+const RED = { r: 241, g: 38, b: 76}
+const GREEN = { r: 0, g: 254, b: 165 }
+
+const COLORS = [
+  '6666FF', 'FFCC00', 'A469B3', 'A469B3', 'A469B3', 'DD4B39', '00CC66'
+]
 
 export default class Pad extends React.Component {
   constructor (props) {
@@ -27,6 +33,9 @@ export default class Pad extends React.Component {
   }
 
   onPress (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
     /* Escuchadores de shortcut */
     if (e.which !== RIGHT_CLICK) {
       this.play()
@@ -36,6 +45,9 @@ export default class Pad extends React.Component {
   }
 
   onFree (e) {
+    e.preventDefault()
+    e.stopPropagation()
+
     if (!this.state.isPlayable) return
     if (this.state.is === 'settings') return
 
@@ -44,30 +56,25 @@ export default class Pad extends React.Component {
 
   play () {
     if (this.state.isPlayable && this.state.is !== 'playing') {
-      console.log('Tile.play()')
       /* Looping */
-      if (this.player.duration < LONG_SAMPLE_TIME) {
-        this.player.addEventListener('ended', () => {
-          this.play()
-        }, false)
-      } else {
+      if (this.player.duration > LONG_SAMPLE_TIME) {
         /* Rebobinar al volver a pulsar */
         this.player.pause()
         this.player.currentTime = 0
+        netbeast('sound').set({ track: this.props.track, volume: this.player.volume * 100 })
       }
 
-      netbeast('lights').set({ color: PLAYING_COLOR })
-      netbeast('sound').set({ track: this.props.track, volume: this.player.volume * 100 })
-      .catch((err) => { if(err) netbeast().error(err.message)  })
-      this.setState({ is: 'playing' })
       this.player.play()
+
+      netbeast('lights').set({ color: COLORS[Math.floor(Math.random() * 7)] })
+      this.setState({ is: 'playing' })
     }
   }
 
   stop () {
-    netbeast('lights').set({ color: PLAYABLE_COLOR })
+    netbeast('lights').set({ color: COLORS[Math.floor(Math.random() * 7)] })
     netbeast('sound').set({ status: 'stop' })
-    .catch((err) => { if(err) netbeast().error(err.message) })
+
     this.setState({ is: this.state.is.replace('playing', '') })
     this.player.currentTime = 0
     this.player.pause()
@@ -78,7 +85,8 @@ export default class Pad extends React.Component {
     const className = 'tile ' + (this.state.isPlayable ? 'playable ' : '') + this.state.is
 
     return (
-      <a className={className} onMouseDown={this.onPress} onMouseUp={this.onFree}>
+      <a className={className} onMouseDown={this.onPress} onTouchStart={this.onPress}
+      onMouseUp={this.onFree} onTouchEnd={this.onFree}>
       <audio ref={(ref) => this.player = ref}>
       <source src={track} />
       Your browser does not support the audio tag.
