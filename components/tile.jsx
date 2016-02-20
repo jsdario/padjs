@@ -26,9 +26,14 @@ export default class Pad extends React.Component {
     const { track } = props
     if (track) this.player.src = track
     // this.player.onloadeddata = () => console.log('track', track, 'loaded')
-    this.player.volume = 0.1
+    this.player.volume = 0.25
     this.player.oncanplay = () => {
       this.setState({ isPlayable: true })
+    }
+    this.player.onended = () => {
+      console.log('has ended!')
+      this.player.pause()
+      this.player.currentTime = 0
     }
   }
 
@@ -49,35 +54,31 @@ export default class Pad extends React.Component {
     e.stopPropagation()
 
     if (!this.state.isPlayable) return
-    if (this.state.is === 'settings') return
 
     this.stop()
   }
 
   play () {
     if (this.state.isPlayable && this.state.is !== 'playing') {
-      /* Looping */
-      if (this.player.duration > LONG_SAMPLE_TIME) {
-        /* Rebobinar al volver a pulsar */
+      if (this.player && this.player.duration > LONG_SAMPLE_TIME) {
+        netbeast('music').set({ track: this.props.track, volume: this.player.volume * 100 })
+      } else {
         this.player.pause()
         this.player.currentTime = 0
-        netbeast('sound').set({ track: this.props.track, volume: this.player.volume * 100 })
+        setTimeout(() => this.player.play(), 1)
       }
 
-      this.player.play()
-
-      netbeast('lights').set({ color: COLORS[Math.floor(Math.random() * 7)] })
+      netbeast('lights').set({ color: COLORS[Math.floor(Math.random() * 7)], power: 'on' })
       this.setState({ is: 'playing' })
     }
   }
 
   stop () {
-    netbeast('lights').set({ color: COLORS[Math.floor(Math.random() * 7)] })
-    netbeast('sound').set({ status: 'stop' })
-
     this.setState({ is: this.state.is.replace('playing', '') })
-    this.player.currentTime = 0
-    this.player.pause()
+
+    if (this.player.duration > LONG_SAMPLE_TIME) {
+      netbeast('music').set({ status: 'stop' })
+    }
   }
 
   render () {
@@ -86,7 +87,7 @@ export default class Pad extends React.Component {
 
     return (
       <a className={className} onMouseDown={this.onPress} onTouchStart={this.onPress}
-      onMouseUp={this.onFree} onTouchEnd={this.onFree}>
+      onMouseUp={this.onFree} onTouchEnd={this.onFree} onTouchCancel={this.onFree}>
       <audio ref={(ref) => this.player = ref}>
       <source src={track} />
       Your browser does not support the audio tag.
