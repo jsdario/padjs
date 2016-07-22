@@ -1,18 +1,8 @@
 import React from 'react'
-import netbeast from 'netbeast'
 
 const LONG_SAMPLE_TIME = 2
 const LEFT_CLICK = 1
 const RIGHT_CLICK = 3
-
-const PLAYABLE_COLOR = '00E9CF'
-const PLAYING_COLOR = 'FFE867'
-const RED = { r: 241, g: 38, b: 76}
-const GREEN = { r: 0, g: 254, b: 165 }
-
-const COLORS = [
-  '6666FF', 'FFCC00', 'A469B3', 'A469B3', 'A469B3', 'DD4B39', '00CC66'
-]
 
 export default class Pad extends React.Component {
   constructor (props) {
@@ -31,7 +21,6 @@ export default class Pad extends React.Component {
       this.setState({ isPlayable: true })
     }
     this.player.onended = () => {
-      console.log('has ended!')
       this.player.pause()
       this.player.currentTime = 0
     }
@@ -59,26 +48,18 @@ export default class Pad extends React.Component {
   }
 
   play () {
-    if (this.state.isPlayable && this.state.is !== 'playing') {
-      if (this.player && this.player.duration > LONG_SAMPLE_TIME) {
-        netbeast('music').set({ track: this.props.track, volume: this.player.volume * 100 })
-      } else {
-        this.player.pause()
-        this.player.currentTime = 0
-        setTimeout(() => this.player.play(), 1)
-      }
-
-      netbeast('lights').set({ color: COLORS[Math.floor(Math.random() * 7)], power: 'on' })
-      this.setState({ is: 'playing' })
+    if (this.state.isPlayable && this.state.is === 'playing') {
+      this.player.pause()
+      this.player.currentTime = 0
     }
+    setTimeout(() => this.player.play(), 1)
+    this.setState({ is: 'playing' })
   }
 
   stop () {
     this.setState({ is: this.state.is.replace('playing', '') })
-
-    if (this.player.duration > LONG_SAMPLE_TIME) {
-      netbeast('music').set({ status: 'stop' })
-    }
+    this.player.pause()
+    this.player.currentTime = 0
   }
 
   render () {
@@ -88,10 +69,9 @@ export default class Pad extends React.Component {
     return (
       <a className={className} onMouseDown={this.onPress} onTouchStart={this.onPress}
       onMouseUp={this.onFree} onTouchEnd={this.onFree} onTouchCancel={this.onFree}>
-      <audio ref={(ref) => this.player = ref}>
-      <source src={track} />
-      Your browser does not support the audio tag.
-      </audio>
+        <audio src={track} ref={(ref) => this.player = ref}>
+          Your browser does not support the audio tag.
+        </audio>
       </a>
     )
   }

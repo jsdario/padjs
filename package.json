@@ -28,6 +28,8 @@
     "commander": "^2.9.0",
     "express": "^4.13.3",
     "netbeast": "^1.0.1",
+    "react": "^15.2.1",
+    "react-dom": "^0.14.8",
     "superagent": "^1.7.2",
     "superagent-bluebird-promise": "^3.0.0"
   },

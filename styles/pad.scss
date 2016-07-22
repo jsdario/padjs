@@ -9,7 +9,12 @@
 }
 
 #pad {
-  /* Tamanio */
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#matrix {
   @media only screen and (max-device-width: 515px) {
     /* define mobile specific styles come here */
     width: 100%;
@@ -38,11 +43,8 @@
     }
   }
   @media only screen and (min-device-width: 515px) {
-    margin: auto;
     width: 515px;
     height: 530px;
-    margin-top: 20px;
-    padding: 8px;
     /* Size modifiers */
     .tile {
       margin: 0 4px;
@@ -69,7 +71,6 @@
   /* resto de características */
   display: block;
   border-radius: 4px;
-  background-color: $pad_bg;
   user-select: none;
   .row {
     width: 100%;
@@ -161,4 +162,11 @@
       text-shadow: 0 0 10px white;
     }
   }
+}
+
+#panel {
+  color: white;
+  width: 30px;
+  padding: 10px;
+  font-size: 24px;
 }

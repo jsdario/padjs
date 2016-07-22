@@ -10,7 +10,7 @@ export default class Pad extends React.Component {
   }
 
   componentDidMount () {
-    request.get('/i/padjs/presets').end((err, res) => {
+    request.get('/presets.json').end((err, res) => {
       if (err) return console.error(err)
       this.setState({ tracks: res.body })
     })
@@ -26,11 +26,16 @@ export default class Pad extends React.Component {
     }
 
     return (
-      <div id='pad' className='small'>
-        {pad.map(function (data, index) {
-          const track = data !== index ? data : null
-          return <Tile key={index} track={track} />
-        })}
+      <div id='pad'>
+        <div id='matrix' className='small'>
+          {pad.map(function (data, index) {
+            const track = data !== index ? data : null
+            return <Tile key={index} track={track} />
+          })}
+        </div>
+        <div id='panel'>
+          <span className='fa fa-music'> </span>
+        </div>
       </div>
     )
   }

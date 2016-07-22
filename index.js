@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-var fs = require('fs')
 var http = require('http')
 
 var express = require('express')
@@ -14,19 +13,6 @@ cmd
 var app = express()
 
 app.use(express.static('public'))
-app.get('/presets', function (req, res) {
-  fs.readdir('./presets', function (err, files) {
-    if (err) res.status(500).send(err)
-
-    files.forEach(function (file, idx) {
-      files[idx] = 'http://' + process.env.NETBEAST + '/i/padjs/tracks/' + file
-    })
-
-    res.json(files)
-  })
-})
-
-app.use('/tracks', express.static('presets'))
 
 var server = http.createServer(app)
 server.listen(cmd.port || 4000, function () {
