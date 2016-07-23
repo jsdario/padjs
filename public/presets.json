@@ -1,8 +1,8 @@
 [
-    "/presets/clap.wav",
-    "/presets/clhat.wav",
-    "/presets/hohey.mp3",
-    "/presets/kick.wav",
-    "/presets/pray.mp3",
-    "/presets/snare.wav"
+  {"icon": "drum", "name": "clap", "url": "/presets/clap.wav"},
+  {"icon": "drum", "name": "clhat", "url": "/presets/clhat.wav"},
+  {"icon": "musical-note", "name": "hohey", "url": "/presets/hohey.mp3"},
+  {"icon": "drum", "name": "kick", "url": "/presets/kick.wav"},
+  {"icon": "musical-note", "name": "pray", "url": "/presets/pray.mp3"},
+  {"icon": "drum", "name": "snare", "url": "/presets/snare.wav"}
 ]

@@ -11,11 +11,14 @@
 #pad {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  padding-top: 20px;
+  @media (max-width: 600px) {
+    flex-direction: column !important;
+  }
 }
 
 #matrix {
-  @media only screen and (max-device-width: 515px) {
+  @media (max-width: 515px) {
     /* define mobile specific styles come here */
     width: 100%;
     height: 360px;
@@ -42,7 +45,7 @@
       }
     }
   }
-  @media only screen and (min-device-width: 515px) {
+  @media (min-width: 515px) {
     width: 515px;
     height: 530px;
     /* Size modifiers */

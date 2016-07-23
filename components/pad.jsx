@@ -10,7 +10,7 @@ export default class Pad extends React.Component {
   }
 
   componentDidMount () {
-    request.get('/presets.json').end((err, res) => {
+    request.get('/default.json').end((err, res) => {
       if (err) return console.error(err)
       this.setState({ tracks: res.body })
     })
@@ -34,7 +34,7 @@ export default class Pad extends React.Component {
           })}
         </div>
         <div id='panel'>
-          <span className='fa fa-music'> </span>
+          <i className='fa fa-music' onClick={window.toggleDrawer} />
         </div>
       </div>
     )
