@@ -53,6 +53,8 @@ var _tile2 = _interopRequireDefault(_tile);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -68,6 +70,8 @@ var Pad = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Pad).call(this, props));
 
     _this.state = { tracks: [] };
+    window.startAssignation = _this.startAssignation = _this.startAssignation.bind(_this);
+    window.endAssignation = _this.endAssignation = _this.endAssignation.bind(_this);
     return _this;
   }
 
@@ -87,7 +91,9 @@ var Pad = function (_React$Component) {
       var _props = this.props;
       var cols = _props.cols;
       var rows = _props.rows;
-      var tracks = this.state.tracks;
+      var _state = this.state;
+      var tracks = _state.tracks;
+      var assigning = _state.assigning;
 
 
       var pad = [];
@@ -103,15 +109,30 @@ var Pad = function (_React$Component) {
           { id: 'matrix', className: 'small' },
           pad.map(function (data, index) {
             var track = data !== index ? data : null;
-            return _react2.default.createElement(_tile2.default, { key: index, track: track });
+            return _react2.default.createElement(_tile2.default, { key: index, idx: index, track: track, assigning: assigning });
           })
         ),
         _react2.default.createElement(
           'div',
           { id: 'panel' },
-          _react2.default.createElement('i', { className: 'fa fa-music', onClick: window.toggleDrawer })
+          _react2.default.createElement('i', { className: 'fa fa-music clickable', onClick: window.toggleDrawer })
         )
       );
+    }
+  }, {
+    key: 'startAssignation',
+    value: function startAssignation(song) {
+      this.setState({ assigning: song });
+      window.toggleDrawer();
+      console.log('assignation started', song);
+    }
+  }, {
+    key: 'endAssignation',
+    value: function endAssignation(idx, track) {
+      var tracks = [].concat(_toConsumableArray(this.state.tracks));
+      tracks[idx] = track.url;
+      this.setState({ assigning: null, tracks: tracks });
+      console.log('assingation ended on ', idx, 'with track', track, 'with state', this.state);
     }
   }]);
 
@@ -169,7 +190,13 @@ var Preset = function (_React$Component) {
         'li',
         { draggable: true, className: 'presets-drawer__list__item' },
         _react2.default.createElement('img', { src: '/img/vendor/svg/' + data.icon + '.svg' }),
-        data.name,
+        _react2.default.createElement(
+          'span',
+          { className: 'clickable', onClick: function onClick() {
+              return window.startAssignation(data);
+            } },
+          data.name
+        ),
         _react2.default.createElement(
           'span',
           { className: 'pull-right' },
@@ -358,10 +385,36 @@ var Pad = function (_React$Component) {
       };
     }
   }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      var track = this.props.track;
+
+      var className = 'tile ' + (this.state.isPlayable ? 'playable ' : '') + this.state.is + (this.props.assigning ? 'assigning' : '');
+
+      return _react2.default.createElement(
+        'a',
+        { className: className, onMouseDown: this.onPress, onTouchStart: this.onPress,
+          onMouseUp: this.onFree, onTouchEnd: this.onFree, onTouchCancel: this.onFree },
+        _react2.default.createElement(
+          'audio',
+          { src: track, ref: function ref(_ref) {
+              return _this3.player = _ref;
+            } },
+          'Your browser does not support the audio tag.'
+        )
+      );
+    }
+  }, {
     key: 'onPress',
     value: function onPress(e) {
       e.preventDefault();
       e.stopPropagation();
+
+      if (this.props.assigning) {
+        return window.endAssignation(this.props.idx, this.props.assigning);
+      }
 
       /* Escuchadores de shortcut */
       if (e.which !== RIGHT_CLICK) {
@@ -383,14 +436,14 @@ var Pad = function (_React$Component) {
   }, {
     key: 'play',
     value: function play() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.state.isPlayable && this.state.is === 'playing') {
         this.player.pause();
         this.player.currentTime = 0;
       }
       setTimeout(function () {
-        return _this3.player.play();
+        return _this4.player.play();
       }, 1);
       this.setState({ is: 'playing' });
     }
@@ -400,28 +453,6 @@ var Pad = function (_React$Component) {
       this.setState({ is: this.state.is.replace('playing', '') });
       this.player.pause();
       this.player.currentTime = 0;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this4 = this;
-
-      var track = this.props.track;
-
-      var className = 'tile ' + (this.state.isPlayable ? 'playable ' : '') + this.state.is;
-
-      return _react2.default.createElement(
-        'a',
-        { className: className, onMouseDown: this.onPress, onTouchStart: this.onPress,
-          onMouseUp: this.onFree, onTouchEnd: this.onFree, onTouchCancel: this.onFree },
-        _react2.default.createElement(
-          'audio',
-          { src: track, ref: function ref(_ref) {
-              return _this4.player = _ref;
-            } },
-          'Your browser does not support the audio tag.'
-        )
-      );
     }
   }]);
 

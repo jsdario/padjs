@@ -95,6 +95,7 @@
 
 .tile {
   display: inline-block;
+  cursor: pointer;
   border-radius: 4px;
   border-bottom-width: 3px;
   border-bottom-color: grey;
@@ -136,7 +137,7 @@
       background-color: #231F20;
     }
   }
-  &.selectable {
+  &.selectable, &.assigning {
     @include tile-color($selectable_tile);
   }
   &.scheduling, &.scheduled, &.waiting {

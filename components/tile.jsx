@@ -26,9 +26,28 @@ export default class Pad extends React.Component {
     }
   }
 
+  render () {
+    const { track } = this.props
+    const className = 'tile ' + (this.state.isPlayable ? 'playable ' : '') + this.state.is +
+    (this.props.assigning ? 'assigning' : '')
+
+    return (
+      <a className={className} onMouseDown={this.onPress} onTouchStart={this.onPress}
+      onMouseUp={this.onFree} onTouchEnd={this.onFree} onTouchCancel={this.onFree}>
+        <audio src={track} ref={(ref) => this.player = ref}>
+          Your browser does not support the audio tag.
+        </audio>
+      </a>
+    )
+  }
+
   onPress (e) {
     e.preventDefault()
     e.stopPropagation()
+
+    if (this.props.assigning) {
+      return window.endAssignation(this.props.idx, this.props.assigning)
+    }
 
     /* Escuchadores de shortcut */
     if (e.which !== RIGHT_CLICK) {
@@ -60,19 +79,5 @@ export default class Pad extends React.Component {
     this.setState({ is: this.state.is.replace('playing', '') })
     this.player.pause()
     this.player.currentTime = 0
-  }
-
-  render () {
-    const { track } = this.props
-    const className = 'tile ' + (this.state.isPlayable ? 'playable ' : '') + this.state.is
-
-    return (
-      <a className={className} onMouseDown={this.onPress} onTouchStart={this.onPress}
-      onMouseUp={this.onFree} onTouchEnd={this.onFree} onTouchCancel={this.onFree}>
-        <audio src={track} ref={(ref) => this.player = ref}>
-          Your browser does not support the audio tag.
-        </audio>
-      </a>
-    )
   }
 }

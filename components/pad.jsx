@@ -7,6 +7,8 @@ export default class Pad extends React.Component {
   constructor (props) {
     super(props)
     this.state = { tracks: [] }
+    window.startAssignation = this.startAssignation = this.startAssignation.bind(this)
+    window.endAssignation = this.endAssignation = this.endAssignation.bind(this)
   }
 
   componentDidMount () {
@@ -18,7 +20,7 @@ export default class Pad extends React.Component {
 
   render () {
     const { cols, rows } = this.props
-    const { tracks } = this.state
+    const { tracks, assigning } = this.state
 
     let pad = []
     for (var i = 0; i < cols * rows; i++) {
@@ -30,13 +32,26 @@ export default class Pad extends React.Component {
         <div id='matrix' className='small'>
           {pad.map(function (data, index) {
             const track = data !== index ? data : null
-            return <Tile key={index} track={track} />
+            return <Tile key={index} idx={index} track={track} assigning={assigning} />
           })}
         </div>
         <div id='panel'>
-          <i className='fa fa-music' onClick={window.toggleDrawer} />
+          <i className='fa fa-music clickable' onClick={window.toggleDrawer} />
         </div>
       </div>
     )
+  }
+
+  startAssignation (song) {
+    this.setState({ assigning: song })
+    window.toggleDrawer()
+    console.log('assignation started', song)
+  }
+
+  endAssignation (idx, track) {
+    const tracks = [...this.state.tracks]
+    tracks[idx] = track.url
+    this.setState({ assigning: null, tracks })
+    console.log('assingation ended on ', idx, 'with track', track, 'with state', this.state)
   }
 }

@@ -9,7 +9,11 @@ class Preset extends React.Component {
     return (
       <li draggable={true} className='presets-drawer__list__item'>
         <img src={`/img/vendor/svg/${data.icon}.svg`} />
-        {data.name}
+
+        <span className='clickable' onClick={() => window.startAssignation(data)}>
+          {data.name}
+        </span>
+
         <span className='pull-right'>
           <i onClick={() => this.play()} className='fa fa-play clickable'/>
           &nbsp;&nbsp;
